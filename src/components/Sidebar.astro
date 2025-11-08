@@ -1,0 +1,51 @@
+---
+import Section from "./Section.astro";
+import Profile from "../images/Profile.png";
+---
+
+<aside class="flex flex-col gap-6">
+  <Section>
+    <img src={Profile.src} alt="Profile Picture" class="object-cover" />
+    <h2 class="text-center text-xl font-semibold text-gray-700">suyasuyaTY</h2>
+    <p class="text-center text-sm text-gray-600">
+      Astro最高! Astro最高! イェイイェイ!<br />オマエもAstro最高と叫びなさい!!
+    </p>
+  </Section>
+  <Section>
+    <h2 class="text-md mb-4 font-semibold text-gray-600">カテゴリー</h2>
+    <ul class="flex flex-col gap-3">
+      <li>
+        <a
+          href="#"
+          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
+        >
+          競プロ
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
+        >
+          フロントエンド
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
+        >
+          雑記
+        </a>
+      </li>
+      <li>
+        <a
+          href="#"
+          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
+        >
+          音楽
+        </a>
+      </li>
+    </ul>
+  </Section>
+</aside>

@@ -1,0 +1,83 @@
+---
+import { Icon } from "astro-icon/components";
+
+const navLinks = [
+  { href: "/", label: "Home", icon: "heroicons:home-20-solid" },
+  {
+    href: "/posts",
+    label: "Posts",
+    icon: "heroicons:archive-box-arrow-down-20-solid",
+  },
+  {
+    href: "/projects",
+    label: "Projects",
+    icon: "heroicons:wrench-screwdriver-16-solid",
+  },
+  { href: "/link", label: "Link", icon: "heroicons:link-20-solid" },
+];
+---
+
+<header
+  id="main-header"
+  class="sticky top-0 z-10 rounded-md bg-white/20 shadow-md transition-transform duration-300 ease-in-out"
+>
+  <nav class="mx-auto flex items-center justify-between px-4 py-6 md:px-6">
+    <div class="text-xl font-bold text-blue-600">
+      <a href="/">suyasuyaTY</a>
+    </div>
+
+    <ul class="flex gap-4 md:gap-12">
+      {
+        navLinks.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="flex items-center gap-2 rounded-md px-3 py-2 text-lg text-gray-700 transition-colors duration-200 hover:bg-blue-600/10 hover:text-blue-600"
+            >
+              <Icon name={link.icon} />
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <ul class="flex gap-2">
+      <li class="text-lg text-gray-500">
+        <Icon name="heroicons:magnifying-glass-16-solid" />
+      </li>
+      <li class="text-lg text-gray-500">
+        <Icon name="heroicons:moon-20-solid" />
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script lang="ts" is:inline>
+  let lastScrollTop = 0;
+  const header = document.getElementById("main-header");
+
+  if (header) {
+    window.addEventListener("scroll", () => {
+      let currentScrollTop =
+        window.scrollY || document.documentElement.scrollTop;
+
+      if (
+        currentScrollTop > lastScrollTop &&
+        currentScrollTop > header.offsetHeight
+      ) {
+        // 1. 下にスクロール
+        // 2. ヘッダーの高さより多くスクロールしている
+        // → ヘッダーを隠す (Tailwindの -translate-y-full クラスを追加)
+        header.classList.add("-translate-y-full");
+      } else {
+        // 上にスクロール
+        // → ヘッダーを表示する (クラスを削除)
+        header.classList.remove("-translate-y-full");
+      }
+
+      // 最後のスクロール位置を更新 (0未満にならないように)
+      lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    });
+  }
+</script>
