@@ -1,6 +1,17 @@
 ---
 import Section from "./Section.astro";
 import Profile from "../images/Profile.png";
+import { getCollection } from "astro:content";
+
+const allBlogPosts = await getCollection("blog");
+const categoryCounts = new Map<string, number>();
+allBlogPosts.forEach((post) => {
+  const category = post.data.category;
+  categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1);
+});
+const sortedCategories = Array.from(categoryCounts.entries()).sort(
+  (a, b) => b[1] - a[1],
+);
 ---
 
 <aside class="flex flex-col gap-6">
@@ -14,38 +25,19 @@ import Profile from "../images/Profile.png";
   <Section>
     <h2 class="text-md mb-4 font-semibold text-gray-600">カテゴリー</h2>
     <ul class="flex flex-col gap-3">
-      <li>
-        <a
-          href="#"
-          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
-        >
-          競プロ
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
-        >
-          フロントエンド
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
-        >
-          雑記
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="text-gray-700 transition-colors duration-200 hover:text-blue-600"
-        >
-          音楽
-        </a>
-      </li>
+      {
+        sortedCategories.map(([category, count]) => (
+          <li>
+            <a
+              href={`/posts/category/${category}`}
+              class="flex justify-between text-gray-700 transition-colors duration-200 hover:text-blue-600"
+            >
+              <span>{category}</span>
+              <span class="text-sm text-gray-500">{count}</span>
+            </a>
+          </li>
+        ))
+      }
     </ul>
   </Section>
 </aside>

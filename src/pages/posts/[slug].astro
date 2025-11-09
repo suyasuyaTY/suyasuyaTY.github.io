@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const allBlogPosts = await getCollection("blog");
+  return allBlogPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: { entry: post },
+  }));
+}
+
+const { slug } = Astro.params;
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout title={`${slug} | suyasuyaTYの部屋`}>
+  <article>
+    <h1 class="mb-8 text-3xl font-bold">Blog Post: {slug}</h1>
+    <div class="prose prose-blue max-w-none">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

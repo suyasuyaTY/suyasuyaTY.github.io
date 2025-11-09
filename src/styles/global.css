@@ -1,1 +1,186 @@
 @import "tailwindcss";
+
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-text-heading: theme(colors.black);
+  --color-text-body: theme(colors.gray.700);
+  --color-border-subtle: theme(colors.gray.300);
+  --color-primary: theme(colors.indigo.600);
+  --color-primary-subtle: theme(colors.indigo.300);
+}
+
+@utility prose-blue {
+  --tw-prose-body: var(--color-text-body);
+  --tw-prose-headings: var(--color-text-heading);
+  --tw-prose-lead: var(--color-border-subtle);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bold: var(--color-primary);
+  --tw-prose-counters: var(--color-primary-subtle);
+  --tw-prose-bullets: var(--color-primary-subtle);
+  --tw-prose-hr: var(--color-border-subtle);
+  --tw-prose-quotes: var(--color-text-body);
+  --tw-prose-quote-borders: var(--color-primary);
+  --tw-prose-captions: var(--color-border-subtle);
+  --tw-prose-code: var(--color-primary);
+  --tw-prose-th-borders: var(--color-text-heading);
+  --tw-prose-td-borders: var(--color-border-subtle);
+
+  --tw-prose-invert-body: var(--color-blue-secondary);
+  --tw-prose-invert-headings: var(--color-white);
+  --tw-prose-invert-lead: var(--color-pink-300);
+  --tw-prose-invert-links: var(--color-white);
+  --tw-prose-invert-bold: var(--color-white);
+  --tw-prose-invert-counters: var(--color-pink-400);
+  --tw-prose-invert-bullets: var(--color-pink-600);
+  --tw-prose-invert-hr: var(--color-pink-700);
+  --tw-prose-invert-quotes: var(--color-pink-100);
+  --tw-prose-invert-quote-borders: var(--color-pink-700);
+  --tw-prose-invert-captions: var(--color-pink-400);
+  --tw-prose-invert-code: var(--color-white);
+  --tw-prose-invert-pre-code: var(--color-pink-300);
+  --tw-prose-invert-pre-bg: rgb(0 0 0 / 50%);
+  --tw-prose-invert-th-borders: var(--color-pink-600);
+  --tw-prose-invert-td-borders: var(--color-pink-700);
+}
+
+/* インラインコード */
+.prose code {
+  background-color: theme(colors.indigo.200/0.3);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.prose code::before,
+.prose code::after {
+  content: none;
+}
+
+/* ダークモード時のインラインコード */
+.dark .prose :where(code):not(:where(pre *)) {
+  background-color: theme(colors.blue.900 / 0.7);
+}
+
+/* コードブロックのコピーボタン */
+.expressive-code .copy button::before {
+  border: none !important;
+  background-color: theme(colors.slate.200);
+}
+
+.remark-link-card-plus__container {
+  width: 100%;
+  margin-bottom: 1.25em;
+}
+
+.remark-link-card-plus__card {
+  --padding-x: 1rem;
+  --padding-y: 0.7rem;
+  --border-radius: calc(0.5rem - 1px);
+  border: 1px solid var(--tw-prose-hr);
+  border-radius: calc(var(--border-radius) + 1px);
+  text-decoration: none;
+  display: grid;
+  grid-template-columns: 1fr 116px;
+  gap: 1rem;
+  @media (min-width: 60ch) {
+    grid-template-columns: 1fr 220px;
+  }
+  transition: background-color 150ms;
+
+  &:hover {
+    background-color: var(--primary-color);
+    @media (prefers-color-scheme: dark) {
+      background-color: var(--primary-color-lighten);
+    }
+  }
+}
+
+.remark-link-card-plus__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: normal;
+
+  grid-column: 1;
+  padding: var(--padding-y) 0 var(--padding-y) var(--padding-x);
+  max-width: 100%;
+  min-width: 100%;
+  border-radius: var(--border-radius) 0 0 var(--border-radius);
+}
+
+/*
+.remark-link-card-plus__content {
+}
+*/
+
+.remark-link-card-plus__title {
+  font-size: 1rem;
+  font-weight: bold;
+  line-height: 1.3;
+  color: var(--tw-prose-headings);
+
+  overflow: hidden;
+  display: -webkit-box;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
+.remark-link-card-plus__description {
+  font-size: 0.8rem;
+  color: #737373;
+  @media (prefers-color-scheme: dark) {
+    color: #a3a3a3;
+  }
+
+  margin-bottom: 0.5em;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.remark-link-card-plus__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.remark-link-card-plus__favicon {
+  margin-top: 0.15rem;
+  margin-bottom: 0;
+}
+
+.remark-link-card-plus__url {
+  font-size: 0.8rem;
+  color: #525252;
+  @media (prefers-color-scheme: dark) {
+    color: #d4d4d4;
+  }
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+}
+
+.remark-link-card-plus__thumbnail {
+  grid-column: 2;
+  aspect-ratio: 1 / 1;
+  @media (min-width: 60ch) {
+    aspect-ratio: 1.91 / 1;
+  }
+}
+
+.remark-link-card-plus__image {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  border-radius: 0 var(--border-radius) var(--border-radius) 0;
+}
