@@ -18,7 +18,7 @@ allBlogPosts.sort(
     {
       allBlogPosts.map((post) => (
         <li class="group relative rounded-r-md py-1 pr-4 pl-10 before:absolute before:top-1/2 before:left-2 before:h-1 before:w-1 before:-translate-y-1/2 before:rounded-full before:border-2 before:border-blue-900 before:transition-all before:duration-300 before:content-[''] hover:bg-sky-200/20 hover:before:h-4">
-          <a href={`/posts/${post.slug}`} class="flex items-baseline gap-4">
+          <a href={`/posts/${post.id}`} class="flex items-baseline gap-4">
             <div class="absolute top-1/2 right-full w-24 -translate-y-1/2 rounded-l-md py-2 pr-4 pl-6 text-right text-sm whitespace-nowrap text-gray-600 group-hover:bg-sky-200/20">
               {post.data.createdAt.toISOString().split("T")[0]}
             </div>

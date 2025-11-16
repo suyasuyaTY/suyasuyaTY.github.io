@@ -1,6 +1,11 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Quicksand:wght@300..700&display=swap");
 @import "tailwindcss";
 
 @plugin "@tailwindcss/typography";
+
+@theme {
+  --font-quicksand: "Quicksand", sans-serif;
+}
 
 @theme {
   --color-text-heading: theme(colors.black);

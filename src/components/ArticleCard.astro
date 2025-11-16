@@ -1,0 +1,45 @@
+---
+// src/components/LinkCard.astro
+
+// コンポーネントが受け取るPropsの型を定義します
+interface Props {
+  title: string;
+  createdAt: string;
+  thumbnail: string;
+  url: string;
+}
+
+// Astro.propsからpropsを受け取ります
+const { title, createdAt, url, thumbnail } = Astro.props;
+// URLが内部リンクか外部リンクかを判定
+const isExternal =
+  url.startsWith("http://") || url.startsWith("https://")
+    ? new URL(url).hostname !== Astro.url.hostname
+    : false; // スラッシュ始まりなど相対パスの場合は内部リンクとみなす
+
+const target = isExternal ? "_blank" : undefined;
+const rel = isExternal ? "noopener noreferrer" : undefined;
+---
+
+<a
+  href={url}
+  target={target}
+  rel={rel}
+  class="flex h-20 w-full rounded-sm bg-indigo-300/20 transition-all duration-300 hover:bg-indigo-300/10"
+>
+  <div class="flex flex-1 flex-col justify-between px-4 py-4">
+    <div class="text-normal font-bold">
+      {title}
+    </div>
+
+    <p class="text-xs text-gray-600">
+      {createdAt}
+    </p>
+  </div>
+  <img
+    src={thumbnail}
+    alt={title}
+    class="rounded-r-sm object-cover"
+    loading="lazy"
+  />
+</a>

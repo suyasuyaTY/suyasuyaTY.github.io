@@ -1,7 +1,8 @@
 ---
-import Section from "./Section.astro";
+import Widget from "@components/Widget.astro";
 import Profile from "../images/Profile.png";
 import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
 
 const allBlogPosts = await getCollection("blog");
 const categoryCounts = new Map<string, number>();
@@ -12,17 +13,47 @@ allBlogPosts.forEach((post) => {
 const sortedCategories = Array.from(categoryCounts.entries()).sort(
   (a, b) => b[1] - a[1],
 );
+
+const links = [
+  {
+    href: "https://github.com/suyasuyaTY",
+    icon: "github",
+  },
+  {
+    href: "https://twitter.com/suyasuyaTY",
+    icon: "twitter",
+  },
+  {
+    href: "https://zenn.dev/suyasuyaty",
+    icon: "zenn",
+  },
+];
 ---
 
 <aside class="flex flex-col gap-6">
-  <Section>
+  <Widget>
     <img src={Profile.src} alt="Profile Picture" class="object-cover" />
-    <h2 class="text-center text-xl font-semibold text-gray-700">suyasuyaTY</h2>
+    <h2 class="py-4 text-center text-xl font-semibold text-gray-700">
+      suyasuyaTY
+    </h2>
     <p class="text-center text-sm text-gray-600">
       Astro最高! Astro最高! イェイイェイ!<br />オマエもAstro最高と叫びなさい!!
     </p>
-  </Section>
-  <Section>
+    <div class="mt-4 flex justify-center gap-2 text-gray-500">
+      {
+        links.map(({ href, icon }) => (
+          <a href={href} target="_blank" rel="noopener noreferrer">
+            <Icon
+              name={icon}
+              class="rounded-sm bg-indigo-200/40 p-1 hover:bg-indigo-400/30"
+              size={36}
+            />
+          </a>
+        ))
+      }
+    </div>
+  </Widget>
+  <Widget>
     <h2 class="text-md mb-4 font-semibold text-gray-600">カテゴリー</h2>
     <ul class="flex flex-col gap-3">
       {
@@ -39,5 +70,5 @@ const sortedCategories = Array.from(categoryCounts.entries()).sort(
         ))
       }
     </ul>
-  </Section>
+  </Widget>
 </aside>
