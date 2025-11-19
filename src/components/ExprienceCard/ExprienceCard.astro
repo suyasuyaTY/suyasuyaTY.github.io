@@ -1,0 +1,44 @@
+---
+import { experienceCardStyle } from "./style";
+type Category = "職歴" | "学歴";
+
+interface Props {
+  title: string;
+  subTitle: string;
+  description: string;
+  date: string;
+  category: Category;
+  href?: string;
+}
+
+const { title, subTitle, description, date, category, href } = Astro.props;
+
+const { base, dot, dateText, titleText } = experienceCardStyle({ category });
+---
+
+<li class={base()}>
+  <div class={dot()}></div>
+
+  <time class={dateText()}>
+    {date}
+  </time>
+
+  <hgroup>
+    {
+      href ? (
+        <a href={href} target="_blank" rel="noopener noreferrer">
+          <h3 class={titleText()}>{title}</h3>
+        </a>
+      ) : (
+        <h3 class={titleText()}>{title}</h3>
+      )
+    }
+    <p class="my-1 text-xs font-light text-black">
+      {subTitle}
+    </p>
+  </hgroup>
+
+  <p class="mt-2 font-normal">
+    {description}
+  </p>
+</li>

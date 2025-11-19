@@ -1,0 +1,52 @@
+name: "suyasuyaTY"
+role: "東京科学大学(M1) 情報通信コース"
+bio: |
+  アルゴリズムやデータ構造を駆使して、問題解決や計算量削減を考えることが好きです。
+  最近は、ユーザー体験のよいデザインの作り方であったり、Webアプリケーションのセキュリティなどにも興味があります。
+
+hobbys:
+  - "AtCoder"
+  - "ランニング"
+  - "駅伝"
+  - "野球"
+  - "カラオケ"
+  - "プロセカ"
+  - "食事"
+  - "旅行"
+
+skills:
+  - category: "言語・フレームワーク"
+    items:
+      ["TypeScript", "JavaScript", "React", "Vue.js", "Astro", "C/C++", "Go"]
+  - category: "コンピューターサイエンス"
+    items: ["アルゴリズム", "データ構造", "セキュリティ", "（物理エンジン）"]
+  - category: "プラットフォーム"
+    items: ["Git", "Docker", "Cloudflare"]
+
+certifications:
+  - title: "応用情報技術者"
+    date: "2025/04/20"
+  - title: "TOEIC L&R 520点"
+    date: "2025/08/24"
+
+experiences:
+  - title: "富士通株式会社"
+    subTitle: "サマーインターンシップ（4週間）"
+    description: "セキュリティチームに配属し、Webアプリケーションセキュリティ診断を行いました。"
+    date: "2025/10"
+    category: "職歴"
+    href: "https://fujitsu.recruiting.jp.fujitsu.com/intern/20240524-01/"
+
+  - title: "フューチャー株式会社"
+    subTitle: "Engineer Camp（4週間）"
+    description: "新聞社向けシステムチームに配属され、Vue.jsを用いたフロントエンドの開発に携わりました。"
+    date: "2025/08"
+    category: "職歴"
+    href: "https://www.future.co.jp/recruit/summer_intern2025/"
+
+  - title: "東京科学大学"
+    subTitle: "学士（情報通信系）"
+    description: "東京科学大学 工学院情報通信系の卒業時に優秀学生賞を頂きました。"
+    date: "2021/04-2025/03"
+    category: "学歴"
+    href: "https://www.isct.ac.jp/ja/news/tzqg2gf3e7n2"

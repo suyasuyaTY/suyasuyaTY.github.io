@@ -1,73 +1,22 @@
 ---
-import ArticleCard from "@components/ArticleCard.astro";
-import H2 from "@components/H2.astro";
-import H3 from "@components/H3.astro";
+import ArticleCard from "@components/ArticleCard/ArticleCard.astro";
+import ExprienceCard from "@components/ExprienceCard/ExprienceCard.astro";
+
+import H2 from "@components/common/H2.astro";
+import H3 from "@components/common/H3.astro";
+
 import BaseLayout from "@layouts/BaseLayout.astro";
-import { getCollection } from "astro:content";
 
-const hobbys = [
-  "AtCoder",
-  "ランニング",
-  "駅伝",
-  "野球",
-  "カラオケ",
-  "プロセカ",
-  "食事",
-  "旅行",
-];
+import { getCollection, getEntry } from "astro:content";
 
-const certifications = [
-  {
-    title: "応用情報技術者",
-    date: "2025/04/20",
-  },
-  {
-    title: "TOEIC L&R 520点",
-    date: "2025/08/24",
-  },
-];
+const profileEntry = await getEntry("profiles", "suyasuyaty");
 
-const category = ["職歴", "学歴"] as const;
-type Category = (typeof category)[number];
+if (!profileEntry) {
+  throw new Error("プロフィールが見つかりません");
+}
 
-type Experience = {
-  href: string;
-  title: string;
-  subTitle: string;
-  description: string;
-  date: string;
-  category: Category;
-};
-
-const experiences: Experience[] = [
-  {
-    href: "https://fujitsu.recruiting.jp.fujitsu.com/intern/20240524-01/",
-    title: "富士通株式会社",
-    subTitle: "サマーインターンシップ（4週間）",
-    description:
-      "セキュリティチームに配属し、Webアプリケーションセキュリティ診断を行いました。",
-    date: "2025/10",
-    category: "職歴",
-  },
-  {
-    href: "https://www.future.co.jp/recruit/summer_intern2025/",
-    title: "フューチャー株式会社",
-    subTitle: "Engineer Camp（4週間）",
-    description:
-      "新聞社向けシステムチームに配属され、Vue.jsを用いたフロントエンドの開発に携わりました。",
-    date: "2025/08",
-    category: "職歴",
-  },
-  {
-    href: "https://www.isct.ac.jp/ja/news/tzqg2gf3e7n2",
-    title: "東京科学大学",
-    subTitle: "学士（情報通信系）",
-    description:
-      "東京科学大学 工学院情報通信系の卒業時に優秀学生賞を頂きました。",
-    date: "2021/04-2025/03",
-    category: "学歴",
-  },
-];
+const profile = profileEntry.data;
+const { experiences, skills, certifications, hobbys } = profile;
 
 const allBlogPosts = await getCollection("blog");
 const recentPosts = allBlogPosts
@@ -82,20 +31,16 @@ const recentPosts = allBlogPosts
       <section>
         <h3 class="text-lg font-bold">所属</h3>
         <ul>
-          <li>東京科学大学(M1) 情報通信コース</li>
+          <li>{profile.role}</li>
         </ul>
       </section>
       <section>
         <h3 class="text-lg font-bold">興味</h3>
-        <p>
-          アルゴリズムやデータ構造を駆使して、問題解決や計算量削減を考えることが好きです。<br
-          />
-          最近は、ユーザー体験のよいデザインの作り方であったり、Webアプリケーションのセキュリティなどにも興味があります。
-        </p>
+        <p class="whitespace-pre-wrap">{profile.bio}</p>
       </section>
       <section>
         <h3 class="text-lg font-bold">趣味</h3>
-        <div class="flex gap-2">
+        <div class="flex flex-wrap gap-2">
           {hobbys.map((hobby) => <span>#{hobby} </span>)}
         </div>
       </section>
@@ -150,24 +95,17 @@ const recentPosts = allBlogPosts
     <section>
       <H2>Skills</H2>
       <ul class="my-4 flex flex-col gap-4">
-        <li>
-          <H3>言語・フレームワーク</H3>
-          <p class="font-normal">
-            TypeScript, JavaScript, React, Vue.js, Astro, C/C++, Go
-          </p>
-        </li>
-        <li>
-          <H3>コンピューターサイエンス</H3>
-          <p class="font-normal">
-            アルゴリズム, データ構造, セキュリティ, （物理エンジン）
-          </p>
-        </li>
-        <li>
-          <H3>プラットフォーム</H3>
-          <p class="font-normal">Git, Docker, Cloudflare</p>
-        </li>
+        {
+          skills.map((skillGroup) => (
+            <li>
+              <H3>{skillGroup.category}</H3>
+              <p class="font-normal">{skillGroup.items.join(", ")}</p>
+            </li>
+          ))
+        }
       </ul>
     </section>
+
     <section>
       <H2>Certifications</H2>
       <div>
@@ -183,52 +121,21 @@ const recentPosts = allBlogPosts
         </ul>
       </div>
     </section>
+
     <section>
       <H2>Experience</H2>
       <div>
         <ul class="my-4 px-4">
           {
             experiences.map((exp) => (
-              <li
-                class:list={[
-                  "group relative border-l px-8 pb-6",
-                  { "border-blue-500": exp.category === "職歴" },
-                  { "border-green-500": exp.category === "学歴" },
-                ]}
-                data-category={exp.category}
-              >
-                <div
-                  class:list={[
-                    "absolute top-3 -left-1 h-2 w-2 rounded-full border duration-200 group-hover:scale-200",
-                    {
-                      "border-blue-500 bg-blue-500 group-hover:bg-white":
-                        exp.category === "職歴",
-                    },
-                    {
-                      "border-green-500 bg-green-500 group-hover:bg-white":
-                        exp.category === "学歴",
-                    },
-                  ]}
-                />
-                <time
-                  class:list={[
-                    "text-xs font-light",
-                    {
-                      "text-blue-500": exp.category === "職歴",
-                      "text-green-500": exp.category === "学歴",
-                    },
-                  ]}
-                >
-                  {exp.date}
-                </time>
-                <hgroup>
-                  <h3 class="text-xl font-semibold text-black">{exp.title}</h3>
-                  <p class="my-1 text-xs font-light text-black">
-                    {exp.subTitle}
-                  </p>
-                </hgroup>
-                <p class="font-normal">{exp.description}</p>
-              </li>
+              <ExprienceCard
+                title={exp.title}
+                subTitle={exp.subTitle}
+                description={exp.description}
+                date={exp.date}
+                category={exp.category}
+                href={exp.href}
+              />
             ))
           }
         </ul>
