@@ -1,4 +1,6 @@
 ---
+import { ClientRouter } from "astro:transitions";
+
 import Header from "@components/common/Header.astro";
 import Sidebar from "@components/common/Sidebar.astro";
 import "@styles/global.css";
@@ -8,6 +10,27 @@ export interface Props {
 }
 
 const { title } = Astro.props;
+
+const verticalSlideTransition = {
+  old: {
+    name: "slideDownFadeOut", // 下へ落ちる
+    duration: "0.3s",
+    easing: "ease-in",
+    fillMode: "forwards",
+  },
+  new: {
+    name: "slideUpFadeIn", // 下から上がってくる
+    duration: "0.4s",
+    delay: "1s", // ★重要: ここで少し待つ（前のページが消えかけた頃に動き出す）
+    easing: "ease-out",
+    fillMode: "backwards", // 待っている間は透明（fromの状態）を維持する
+  },
+} as const;
+
+const customTransition = {
+  forwards: verticalSlideTransition,
+  backwards: verticalSlideTransition,
+};
 ---
 
 <html lang="ja">
@@ -17,11 +40,30 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <ClientRouter />
+    <style is:global>
+      /* 現在のページ：下に落ちながら消える */
+      @keyframes slideDownFadeOut {
+        to {
+          transform: translateY(30px); /* 正の値＝下方向 */
+          opacity: 0;
+        }
+      }
+
+      /* 次のページ：下から元の位置に戻ってくる */
+      @keyframes slideUpFadeIn {
+        from {
+          transform: translateY(30px); /* 下にある状態からスタート */
+          opacity: 0;
+        }
+      }
+    </style>
   </head>
   <body class="bg-gray-100 font-sans text-gray-800 md:mx-auto md:max-w-7xl">
     <Header />
     <div class="mx-auto mt-4 flex gap-6">
       <main
+        transition:animate={customTransition}
         class="order-2 flex w-full flex-col gap-6 rounded-2xl bg-white px-4 py-6 shadow-sm md:w-4/5"
       >
         <slot />
