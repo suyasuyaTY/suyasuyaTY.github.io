@@ -3,33 +3,32 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
 const allBlogPosts = await getCollection("blog");
-
 allBlogPosts.sort(
-  (a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime(),
+  (a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()
 );
 ---
 
 <BaseLayout title="記事一覧 | suyasuyaTYの部屋">
-  <h1 class="mb-8 text-3xl font-bold">All Blog Posts</h1>
+  <h1 class="mb-8 text-3xl font-bold text-(--color-text-heading)">
+    All Blog Posts
+  </h1>
 
-  <ul
-    class="relative ml-28 flex flex-col before:absolute before:top-0 before:left-2 before:h-full before:translate-x-1/2 before:border-l-2 before:border-dashed before:border-gray-300 before:content-['']"
-  >
+  <ul class="timeline-list">
     {
       allBlogPosts.map((post) => (
-        <li class="group relative rounded-r-md py-1 pr-4 pl-10 before:absolute before:top-1/2 before:left-2 before:h-1 before:w-1 before:-translate-y-1/2 before:rounded-full before:border-2 before:border-blue-900 before:transition-all before:duration-300 before:content-[''] hover:bg-sky-200/20 hover:before:h-4">
+        <li class="timeline-item">
           <a href={`/posts/${post.id}`} class="flex items-baseline gap-4">
-            <div class="absolute top-1/2 right-full w-24 -translate-y-1/2 rounded-l-md py-2 pr-4 pl-6 text-right text-sm whitespace-nowrap text-gray-600 group-hover:bg-sky-200/20">
+            <div class="timeline-date">
               {post.data.createdAt.toISOString().split("T")[0]}
             </div>
 
-            <div class="min-w-0 flex-1 truncate text-xl font-semibold">
+            <div class="min-w-0 flex-1 truncate text-xl font-semibold text-(--color-text-heading)">
               {post.data.title}
             </div>
 
-            <div class="w-[10%] shrink-0 truncate">
+            <div class="w-[10%] shrink-0 truncate text-right">
               {post.data.tags.map((tag) => (
-                <span class="mr-2 text-xs text-gray-700">#{tag}</span>
+                <span class="timeline-tag">#{tag}</span>
               ))}
             </div>
           </a>

@@ -2,9 +2,6 @@
 import ArticleCard from "@components/ArticleCard/ArticleCard.astro";
 import ExprienceCard from "@components/ExprienceCard/ExprienceCard.astro";
 
-import H2 from "@components/common/H2.astro";
-import H3 from "@components/common/H3.astro";
-
 import BaseLayout from "@layouts/BaseLayout.astro";
 
 import { getCollection, getEntry } from "astro:content";
@@ -26,7 +23,7 @@ const recentPosts = allBlogPosts
 
 <BaseLayout title="About | suyasuyaTYの部屋">
   <section>
-    <H2>About me</H2>
+    <h2>About me</h2>
     <div class="flex flex-col gap-8 py-6">
       <section>
         <h3 class="text-lg font-bold">所属</h3>
@@ -48,10 +45,10 @@ const recentPosts = allBlogPosts
   </section>
 
   <section>
-    <H2 class="text-4xl">Articles</H2>
+    <h2 class="text-4xl">Articles</h2>
     <div class="flex flex-col gap-4 py-4">
       <section>
-        <H3>Posts</H3>
+        <h3>Posts</h3>
         <ul class="my-4 flex flex-col gap-2">
           {
             recentPosts.map((post) => (
@@ -67,7 +64,7 @@ const recentPosts = allBlogPosts
           }
         </ul>
         <section class="my-4">
-          <H3>Zenn</H3>
+          <h3>Zenn</h3>
           <ul class="my-4 flex flex-col gap-2">
             {
               recentPosts.map((post) => (
@@ -93,12 +90,12 @@ const recentPosts = allBlogPosts
     }
 
     <section>
-      <H2>Skills</H2>
+      <h2>Skills</h2>
       <ul class="my-4 flex flex-col gap-4">
         {
           skills.map((skillGroup) => (
             <li>
-              <H3>{skillGroup.category}</H3>
+              <h3>{skillGroup.category}</h3>
               <p class="font-normal">{skillGroup.items.join(", ")}</p>
             </li>
           ))
@@ -107,13 +104,13 @@ const recentPosts = allBlogPosts
     </section>
 
     <section>
-      <H2>Certifications</H2>
+      <h2>Certifications</h2>
       <div>
         <ul class="my-4 flex flex-col gap-4">
           {
             certifications.map((cert) => (
               <li class="rounded-xl border px-8 py-4">
-                <h3 class="text-xl font-semibold text-black">{cert.title}</h3>
+                <h3>{cert.title}</h3>
                 <time class="text-xs font-light">{cert.date}</time>
               </li>
             ))
@@ -123,7 +120,7 @@ const recentPosts = allBlogPosts
     </section>
 
     <section>
-      <H2>Experience</H2>
+      <h2>Experience</h2>
       <div>
         <ul class="my-4 px-4">
           {

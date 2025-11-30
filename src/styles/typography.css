@@ -1,0 +1,91 @@
+/* =========================================
+   Prose Utility (記事本文のスタイル)
+   ========================================= */
+@utility prose-blue {
+  /* --- Light Mode (通常時) --- */
+  --tw-prose-body: var(--color-text-body);
+  --tw-prose-headings: var(--color-text-heading);
+  --tw-prose-lead: var(--color-text-muted);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bold: var(--color-text-heading);
+  --tw-prose-counters: var(--color-primary); /* リストの数字 */
+  --tw-prose-bullets: var(--color-primary); /* リストの点 */
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-text-heading);
+  --tw-prose-quote-borders: var(--color-primary);
+  --tw-prose-captions: var(--color-text-muted);
+  --tw-prose-code: var(--color-primary);
+  --tw-prose-pre-code: var(--color-text-body);
+  --tw-prose-pre-bg: var(--color-bg-surface);
+  --tw-prose-th-borders: var(--color-border);
+  --tw-prose-td-borders: var(--color-border);
+
+  /* --- Dark Mode (dark:prose-invert 適用時) --- */
+  /* ここをすべて青基調のダーク用変数にマッピング */
+  --tw-prose-invert-body: var(--color-text-body-dark);
+  --tw-prose-invert-headings: var(--color-text-heading-dark);
+  --tw-prose-invert-lead: var(--color-text-muted-dark);
+
+  /* リンクや強調は明るい青にする */
+  --tw-prose-invert-links: var(--color-primary-dark);
+  --tw-prose-invert-bold: var(--color-text-heading-dark);
+
+  /* リストの装飾も青系に */
+  --tw-prose-invert-counters: var(--color-primary-dark);
+  --tw-prose-invert-bullets: var(--color-primary-dark);
+
+  /* 境界線 */
+  --tw-prose-invert-hr: var(--color-border-dark);
+
+  /* 引用 */
+  --tw-prose-invert-quotes: var(--color-text-heading-dark);
+  --tw-prose-invert-quote-borders: var(--color-primary-dark);
+
+  /* キャプション */
+  --tw-prose-invert-captions: var(--color-text-muted-dark);
+
+  /* インラインコード */
+  --tw-prose-invert-code: var(--color-primary-dark);
+
+  /* コードブロック (pre) */
+  --tw-prose-invert-pre-code: var(--color-text-body-dark);
+  --tw-prose-invert-pre-bg: var(--color-bg-surface-dark);
+
+  /* テーブル */
+  --tw-prose-invert-th-borders: var(--color-border-dark);
+  --tw-prose-invert-td-borders: var(--color-border-dark);
+}
+
+/* =========================================
+   Custom Elements Style
+   ========================================= */
+
+@layer components {
+  /* 1. インラインコードの背景色 (`code`) */
+  .prose :where(code):not(:where(pre *)) {
+    @apply rounded px-1.5 py-0.5 font-semibold;
+
+    /* Light: 薄い青背景 + 濃い青文字 */
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary);
+  }
+
+  /* Dark: インラインコード */
+  .dark .prose :where(code):not(:where(pre *)) {
+    /* Dark: 半透明の青背景 + 明るい青文字 */
+    background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+    color: var(--color-primary-dark);
+  }
+
+  /* 2. インラインコードのバッククォート削除 */
+  .prose :where(code):not(:where(pre *))::before,
+  .prose :where(code):not(:where(pre *))::after {
+    content: none;
+  }
+
+  /* 3. コードブロック (Expressive Code) のコピーボタン */
+  .expressive-code .copy button::before {
+    border: none !important;
+    background-color: var(--color-text-muted) !important;
+  }
+}

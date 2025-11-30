@@ -1,6 +1,5 @@
 ---
 import { ClientRouter } from "astro:transitions";
-
 import Header from "@components/common/Header.astro";
 import Sidebar from "@components/common/Sidebar.astro";
 import "@styles/global.css";
@@ -11,6 +10,7 @@ export interface Props {
 
 const { title } = Astro.props;
 
+// アニメーション定義は変更なし
 const verticalSlideTransition = {
   old: {
     name: "slideDownFadeOut",
@@ -56,19 +56,27 @@ const customTransition = {
       }
     </style>
   </head>
-  <body class="bg-gray-100 font-sans text-gray-800 md:mx-auto md:max-w-7xl">
+  <body
+    class="animate-background font-sans transition-colors duration-300 md:mx-auto md:max-w-7xl"
+  >
     <Header />
-    <div class="mx-auto mt-4 flex gap-6">
+    <div class="mx-auto mt-4 flex items-start gap-6">
       <main
         transition:animate={customTransition}
-        class="order-2 flex w-full flex-col gap-6 rounded-2xl bg-white px-4 py-6 shadow-sm md:w-4/5"
+        class="widget-card order-2 flex w-full flex-col gap-6 md:w-4/5"
       >
         <slot />
       </main>
 
-      <aside class="order-1 w-full shrink-0 md:w-1/5">
+      <aside class="order-1 flex w-full shrink-0 flex-col gap-6 md:w-1/5">
         <Sidebar />
       </aside>
     </div>
   </body>
 </html>
+
+<script is:inline>
+  document.addEventListener("astro:after-swap", () => {
+    window.scrollTo({ left: 0, top: 0, behavior: "instant" });
+  });
+</script>

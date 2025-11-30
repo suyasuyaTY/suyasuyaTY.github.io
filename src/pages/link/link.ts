@@ -3,6 +3,7 @@ export interface LinkItem {
   url: string;
   description: string;
   image: string;
+  darkImage?: string;
 }
 
 export const socials: LinkItem[] = [
@@ -11,12 +12,14 @@ export const socials: LinkItem[] = [
     url: "https://github.com/suyasuyaTY",
     description: "@suyasuyaTY",
     image: "/src/images/logos/github.png",
+    darkImage: "/src/images/logos/github-white.png",
   },
   {
     title: "X (Twitter)",
     url: "https://twitter.com/suyasuyaTY",
     description: "@suyasuyaTY",
     image: "/src/images/logos/x.png",
+    darkImage: "/src/images/logos/x-white.png",
   },
   {
     title: "Zenn",
@@ -29,6 +32,7 @@ export const socials: LinkItem[] = [
     url: "https://atcoder.jp/users/suyasuyaTY",
     description: "競技プログラミングのプロフィール",
     image: "/src/images/logos/atcoder.png",
+    darkImage: "/src/images/logos/atcoder-white.png",
   },
 ];
 
@@ -46,13 +50,13 @@ export const thanks: LinkItem[] = [
     title: "Astro",
     url: "https://astro.build",
     description: "このサイトの構築に使用しているフレームワーク。",
-    image: "https://astro.build/assets/press/astro-icon-dark.svg",
+    image: "/src/images/logos/astro.png",
+    darkImage: "/src/images/logos/astro-white.png",
   },
   {
     title: "Tailwind CSS",
     url: "https://tailwindcss.com",
     description: "スタイリングに使用。",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg",
+    image: "/src/images/logos/tailwind.png",
   },
 ];

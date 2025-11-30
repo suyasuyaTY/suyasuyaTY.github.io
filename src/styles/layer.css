@@ -1,0 +1,256 @@
+/* layer.css */
+@import "./theme.css";
+
+@layer base {
+  body {
+    /* ベースカラーを適用 */
+    background-color: var(--color-bg-base);
+    color: var(--color-text-body);
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  h2 {
+    @apply font-quicksand relative border-b-2 py-1 text-3xl font-bold;
+    /* 変数を使用することで dark: 修飾子が不要になります */
+    border-color: var(--color-primary-subtle);
+    color: var(--color-text-heading);
+
+    &::after {
+      content: "";
+      @apply absolute -bottom-0.5 left-0 w-[12.5%] border-b-2;
+      border-color: var(--color-primary);
+    }
+  }
+
+  h3 {
+    @apply text-lg font-bold;
+    color: var(--color-text-heading);
+  }
+}
+
+@layer components {
+  /* --- Widget / Card --- */
+  .widget-card {
+    @apply rounded-2xl px-4 py-6 shadow-sm transition-colors duration-300;
+    background-color: var(--color-bg-surface);
+    color: var(--color-text-body);
+  }
+
+  .icon-badge {
+    @apply rounded p-1 transition-colors;
+    background-color: var(--color-primary-subtle);
+    color: var(--color-primary);
+  }
+
+  /* --- Navigation Link (Header) --- */
+  .nav-link {
+    @apply flex items-center gap-2 rounded-md px-3 py-2 text-lg transition-colors duration-200;
+    color: var(--color-text-body);
+
+    &:hover {
+      /* 背景色を薄いPrimary色に */
+      background-color: color-mix(
+        in srgb,
+        var(--color-primary) 10%,
+        transparent
+      );
+      color: var(--color-primary);
+    }
+  }
+
+  /* --- Social Icon Button (Sidebar) --- */
+  .btn-social {
+    @apply rounded-sm p-1 transition-colors duration-200;
+    background-color: var(--color-primary-subtle);
+
+    &:hover {
+      background-color: var(--color-primary-subtle-hover);
+    }
+  }
+
+  /* --- Category Link (Sidebar) --- */
+  .link-category {
+    @apply flex justify-between transition-colors duration-200;
+    color: var(--color-text-body);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    /* カウントバッジ */
+    span:last-child {
+      @apply text-sm;
+      color: var(--color-text-muted);
+    }
+  }
+
+  /* =========================================
+     Link Card (リンクカード)
+     ========================================= */
+  .link-card {
+    @apply flex h-full items-center gap-4 overflow-hidden rounded-xl border p-4 transition-all duration-300;
+
+    /* Colors */
+    background-color: var(--color-bg-surface);
+    border-color: var(--color-border);
+
+    &:hover {
+      @apply pr-12 shadow-md;
+      border-color: var(--color-primary);
+      /* 背景を薄いPrimary色に */
+      background-color: color-mix(
+        in srgb,
+        var(--color-primary) 5%,
+        transparent
+      );
+    }
+  }
+
+  /* 矢印アニメーションのラッパー */
+  .link-card-arrow-container {
+    @apply relative flex h-18 w-18 shrink-0 items-center justify-center duration-300;
+  }
+
+  /* 矢印本体 (擬似要素の複雑な記述をここにまとめる) */
+  .link-card-arrow {
+    @apply relative block h-0.5 w-0 rounded-full transition-all duration-300 ease-out;
+    background-color: var(--color-primary);
+
+    /* ホバー時の線の伸び */
+    .group:hover & {
+      @apply w-6;
+    }
+
+    /* 矢印の先端 (上) */
+    &::before {
+      content: "";
+      @apply absolute top-1/2 right-0 h-0.5 w-3 origin-[calc(100%-1px)_50%] -translate-y-1/2 rotate-45 rounded-full;
+      background-color: var(--color-primary);
+    }
+
+    /* 矢印の先端 (下) */
+    &::after {
+      content: "";
+      @apply absolute top-1/2 right-0 h-0.5 w-3 origin-[calc(100%-1px)_50%] -translate-y-1/2 -rotate-45 rounded-full;
+      background-color: var(--color-primary);
+    }
+  }
+
+  /* =========================================
+     Article Card (記事カード)
+     ========================================= */
+  .article-card {
+    @apply flex h-20 w-full rounded-sm transition-all duration-300;
+
+    /* 背景色: 薄いPrimary色 (theme.cssで定義した subtle を使用) */
+    background-color: var(--color-primary-subtle);
+
+    &:hover {
+      /* ホバー時に少し濃く/薄くする調整 */
+      background-color: color-mix(
+        in srgb,
+        var(--color-primary) 15%,
+        transparent
+      );
+    }
+  }
+
+  /* =========================================
+     Timeline (記事一覧)
+     ========================================= */
+
+  /* リスト全体（垂直の点線） */
+  .timeline-list {
+    @apply relative ml-28 flex flex-col;
+
+    /* 縦の点線 */
+    &::before {
+      content: "";
+      @apply absolute top-0 left-2 h-full translate-x-1/2 border-l-2 border-dashed;
+      border-color: var(--color-border);
+    }
+  }
+
+  /* 各記事の行 */
+  .timeline-item {
+    @apply relative rounded-r-md py-1 pr-4 pl-10 transition-colors duration-200;
+
+    /* ホバー時の背景色 */
+    &:hover {
+      background-color: var(--color-primary-subtle);
+    }
+
+    /* タイムライン上の「点」 */
+    &::before {
+      content: "";
+      @apply absolute top-1/2 left-2 h-1 w-1 -translate-y-1/2 rounded-full border-2 transition-all duration-300;
+
+      /* 色の定義 */
+      border-color: var(--color-primary);
+      background-color: var(
+        --color-bg-base
+      ); /* 線の上に重なるので背景色で埋める */
+    }
+
+    /* ホバー時に点が伸びるアニメーション */
+    &:hover::before {
+      @apply h-4;
+      background-color: var(--color-primary);
+    }
+  }
+
+  /* 左側の日付ラベル */
+  .timeline-date {
+    @apply absolute top-1/2 right-full w-24 -translate-y-1/2 rounded-l-md py-2 pr-4 pl-6 text-right text-sm whitespace-nowrap transition-colors;
+
+    color: var(--color-text-muted);
+
+    /* 親要素(li)ホバー時に、日付部分も背景色をつける */
+    .timeline-item:hover & {
+      background-color: var(--color-primary-subtle);
+      color: var(--color-primary);
+    }
+  }
+
+  .timeline-tag {
+    @apply ml-2 text-xs transition-colors;
+    color: var(--color-text-muted);
+
+    /* 親(.timeline-item)がホバーされた時 */
+    .timeline-item:hover & {
+      color: var(--color-primary);
+    }
+  }
+}
+
+@layer utilities {
+  .animate-background {
+    /* 3色を使ったグラデーション */
+    background: linear-gradient(
+      -45deg,
+      var(--color-bg-grad-1),
+      var(--color-bg-grad-2),
+      var(--color-bg-grad-3),
+      var(--color-bg-grad-1)
+    );
+    /* 画面より大きく描画して動かす */
+    background-size: 400% 400%;
+
+    /* 15秒かけてゆっくり動く */
+    animation: gradient-move 15s ease infinite;
+  }
+
+  @keyframes gradient-move {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}

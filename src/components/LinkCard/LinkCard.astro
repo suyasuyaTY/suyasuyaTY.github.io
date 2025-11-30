@@ -6,49 +6,54 @@ interface Props {
   url: string;
   description: string;
   image: string;
+  darkImage?: string;
 }
 
-const { title, url, description, image } = Astro.props;
+const { title, url, description, image, darkImage } = Astro.props;
 ---
 
 <li class="group h-full list-none">
-  <a
-    href={url}
-    target="_blank"
-    rel="noopener noreferrer"
-    class="flex h-full items-center gap-4 overflow-hidden rounded-xl border border-gray-200 bg-white p-4 transition-all hover:border-blue-400 hover:bg-blue-50/30 hover:pr-12 hover:shadow-md"
-  >
-    <div
-      class="relative flex h-18 w-18 shrink-0 items-center justify-center duration-300"
-    >
+  <a href={url} target="_blank" rel="noopener noreferrer" class="link-card">
+    <div class="link-card-arrow-container">
       <Image
         src={image}
         alt={title}
         height={72}
         width={72}
-        class="object-cover group-hover:opacity-30"
+        class:list={[
+          "object-cover transition-opacity group-hover:opacity-30",
+          darkImage ? "dark:hidden" : "",
+        ]}
       />
+
+      {
+        darkImage && (
+          <Image
+            src={darkImage}
+            alt={title}
+            height={72}
+            width={72}
+            class="hidden object-cover transition-opacity group-hover:opacity-30 dark:block"
+          />
+        )
+      }
+
       <div
         class="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       >
-        <span
-          class:list={[
-            "relative block h-0.5 w-0 rounded-full bg-blue-600 transition-all duration-300 ease-out group-hover:w-6",
-            "before:absolute before:top-1/2 before:right-0 before:h-0.5 before:w-3 before:origin-[calc(100%-1px)_50%] before:-translate-y-1/2 before:rotate-45 before:rounded-full before:bg-blue-600 before:content-['']",
-            "after:absolute after:top-1/2 after:right-0 after:h-0.5 after:w-3 after:origin-[calc(100%-1px)_50%] after:-translate-y-1/2 after:-rotate-45 after:rounded-full after:bg-blue-600 after:content-['']",
-          ]}
-        >
-        </span>
+        <span class="link-card-arrow"></span>
       </div>
     </div>
 
     <div class="flex h-16 flex-1 flex-col justify-between py-0.5">
       <h3
-        class="line-clamp-2 text-base leading-tight font-bold text-gray-800 group-hover:text-blue-600"
+        class="line-clamp-2 text-base leading-tight font-bold text-(--color-text-heading) group-hover:text-(--color-primary)"
       >
         {title}
       </h3>
-      <p class="line-clamp-1 text-xs text-gray-500">{description}</p>
+      <p class="text---color-text-muted) line-clamp-1 text-xs">
+        {description}
+      </p>
     </div>
   </a>
 </li>
