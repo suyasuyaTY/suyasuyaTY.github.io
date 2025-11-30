@@ -1,11 +1,13 @@
 ---
+import { Image } from "astro:assets";
+
 // src/components/LinkCard.astro
 
 // コンポーネントが受け取るPropsの型を定義します
 interface Props {
   title: string;
   createdAt: string;
-  thumbnail: string;
+  thumbnail: string | ImageMetadata;
   url: string;
 }
 
@@ -19,6 +21,7 @@ const isExternal =
 
 const target = isExternal ? "_blank" : undefined;
 const rel = isExternal ? "noopener noreferrer" : undefined;
+const imageClass = "h-full aspect-square object-cover rounded-r-sm";
 ---
 
 <a
@@ -36,10 +39,15 @@ const rel = isExternal ? "noopener noreferrer" : undefined;
       {createdAt}
     </p>
   </div>
-  <img
-    src={thumbnail}
-    alt={title}
-    class="rounded-r-sm object-cover"
-    loading="lazy"
-  />
+  {
+    typeof thumbnail === "string" ? (
+      <img src={thumbnail} alt={title} class={imageClass} loading="lazy" />
+    ) : (
+      <Image
+        src={thumbnail}
+        alt={title}
+        class="aspect-[1.91/1] flex-0 object-contain"
+      />
+    )
+  }
 </a>

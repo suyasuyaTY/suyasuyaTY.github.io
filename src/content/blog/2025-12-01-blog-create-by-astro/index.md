@@ -2,7 +2,7 @@
 createdAt: 2025-11-20
 updatedAt: 2025-11-20
 title: 個人サイトをAstroで作り直した
-thumbnail: aaa
+thumbnail: ./hero.png
 category: IT
 tags: ["Astro", "Tailwind"]
 ---
@@ -10,6 +10,7 @@ tags: ["Astro", "Tailwind"]
 記事のタイトルにあるように、個人サイトをNext.jsからAstroで構築しなおしました。
 
 ## 移行のモチベーション
+
 もともと、今年の5月にNext.jsで個人サイトを作ったばかりでした。
 
 ですが、雑な実装でよくわからないままライブラリを導入して魔実装した結果パフォーマンスが終わってしまったため、1から作り直したいと思っていました。
@@ -29,11 +30,13 @@ tags: ["Astro", "Tailwind"]
 ## 実装のポイント
 
 ### 技術スタック
+
 Astro, Tailwind CSSを利用しています。デプロイ先はClaudflareです。
+
 ### Markdownのデザイン
 
-
 ## 今後対応すること
+
 - 記事の目次作成
 - モバイル対応
 - ダークモード対応
