@@ -51,11 +51,7 @@
 
     &:hover {
       /* 背景色を薄いPrimary色に */
-      background-color: color-mix(
-        in srgb,
-        var(--color-primary) 10%,
-        transparent
-      );
+      background-color: var(--color-primary-subtle);
       color: var(--color-primary);
     }
   }

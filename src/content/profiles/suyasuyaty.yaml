@@ -23,11 +23,15 @@ skills:
   - category: "プラットフォーム"
     items: ["Git", "Docker", "Cloudflare"]
 
-certifications:
+achievements:
+  - title: "2024年度「東京科学大学優秀学生賞」"
+    date: "2024/03/26"
   - title: "応用情報技術者"
     date: "2025/04/20"
   - title: "TOEIC L&R 520点"
     date: "2025/08/24"
+  - title: "AtCoder Algorithm Highest 1598"
+    date: "2025/11/29"
 
 experiences:
   - title: "富士通株式会社"

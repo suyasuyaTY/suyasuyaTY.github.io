@@ -3,19 +3,17 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
 const allBlogPosts = await getCollection("blog");
-allBlogPosts.sort(
-  (a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime()
-);
+const posts = allBlogPosts
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 
 <BaseLayout title="記事一覧 | suyasuyaTYの部屋">
-  <h1 class="mb-8 text-3xl font-bold text-(--color-text-heading)">
-    All Blog Posts
-  </h1>
+  <h2>Posts</h2>
 
-  <ul class="timeline-list">
+  <ul class="timeline-list my-4">
     {
-      allBlogPosts.map((post) => (
+      posts.map((post) => (
         <li class="timeline-item">
           <a href={`/posts/${post.id}`} class="flex items-baseline gap-4">
             <div class="timeline-date">

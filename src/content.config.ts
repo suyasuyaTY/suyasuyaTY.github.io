@@ -31,7 +31,7 @@ const profiles = defineCollection({
       }),
     ),
 
-    certifications: z.array(
+    achievements: z.array(
       z.object({
         title: z.string(),
         date: z.string(),

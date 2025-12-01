@@ -5,6 +5,7 @@ title: 個人サイトをAstroで作り直した
 thumbnail: ./hero.png
 category: IT
 tags: ["Astro", "Tailwind"]
+draft: true
 ---
 
 記事のタイトルにあるように、個人サイトをNext.jsからAstroで構築しなおしました。

@@ -5,6 +5,7 @@ title: 就活前半戦の振り返り
 thumbnail: ./hero.png
 category: 振り返り
 tags: ["就活"]
+draft: true
 ---
 
 今年の5月くらいから就活を始めて、サマーインターンも終わり本選考を出す季節になってきました。

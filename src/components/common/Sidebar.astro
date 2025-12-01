@@ -32,7 +32,13 @@ const links = [
 ---
 
 <section class="widget-card">
-  <Image src={Profile} alt="Profile Picture" class="object-cover" />
+  <Image
+    src={Profile}
+    alt="Profile Picture"
+    class="object-cover"
+    loading="eager"
+    fetchpriority="high"
+  />
 
   <div
     class="py-4 text-center text-xl font-semibold text-(--color-text-heading)"

@@ -6,9 +6,11 @@ import BaseLayout from "@layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection("blog");
-  return allBlogPosts.map((post) => ({
-    params: { slug: post.id },
-  }));
+  return allBlogPosts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: { slug: post.id },
+    }));
 }
 
 const { slug } = Astro.params;
@@ -23,16 +25,16 @@ const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 <BaseLayout title={`${remarkPluginFrontmatter["title"]} | suyasuyaTYの部屋`}>
   <article>
     <div>
-      <h1 class="mb-8 text-3xl font-bold text-(--color-text-heading)">
+      <h1 class="text-3xl font-bold text-(--color-text-heading)">
         {remarkPluginFrontmatter["title"]}
       </h1>
 
-      <div class="mb-8 flex gap-4 text-(--color-text-muted)">
+      <div class="text-md my-4 flex gap-4 font-bold text-(--color-text-muted)">
         {/* 日付 */}
-        <div class="flex items-center gap-1">
+        <div class="flex items-center gap-2">
           <Icon
             name="heroicons:calendar-days-20-solid"
-            size={24}
+            size={32}
             class="icon-badge"
           />
           <span>
@@ -41,28 +43,33 @@ const { Content, headings, remarkPluginFrontmatter } = await render(entry);
         </div>
 
         {/* カテゴリ */}
-        <div class="flex items-center gap-1">
-          <Icon name="heroicons:tag" size={24} class="icon-badge" />
+        <div class="flex items-center gap-2">
+          <Icon name="heroicons:tag" size={32} class="icon-badge" />
           <a
             href={`/posts/category/${entry.data.category}`}
-            class="transition-colors hover:text-(--color-primary)"
+            class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
           >
             {entry.data.category}
           </a>
         </div>
 
         {/* タグ */}
-        <div class="flex items-center gap-1">
-          <Icon name="heroicons:hashtag" size={24} class="icon-badge" />
+        <div class="flex items-center gap-2">
+          <Icon name="heroicons:hashtag" size={32} class="icon-badge" />
           <div class="flex gap-1">
             {
-              entry.data.tags.map((tag) => (
-                <a
-                  href={`/posts/tag/${tag}`}
-                  class="transition-colors hover:text-(--color-primary)"
-                >
-                  #{tag}
-                </a>
+              entry.data.tags.map((tag, index) => (
+                <>
+                  <a
+                    href={`/posts/tag/${tag}`}
+                    class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
+                  >
+                    {tag}
+                  </a>
+                  {index < entry.data.tags.length - 1 && (
+                    <span class="py-1">/</span>
+                  )}
+                </>
               ))
             }
           </div>
