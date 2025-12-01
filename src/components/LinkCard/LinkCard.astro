@@ -1,12 +1,13 @@
 ---
 import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 interface Props {
   title: string;
   url: string;
   description: string;
-  image: string;
-  darkImage?: string;
+  image: ImageMetadata;
+  darkImage?: ImageMetadata;
 }
 
 const { title, url, description, image, darkImage } = Astro.props;

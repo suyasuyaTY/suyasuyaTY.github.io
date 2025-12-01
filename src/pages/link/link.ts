@@ -1,48 +1,61 @@
+import type { ImageMetadata } from "astro";
+
 export interface LinkItem {
   title: string;
   url: string;
   description: string;
-  image: string;
-  darkImage?: string;
+  image: ImageMetadata;
+  darkImage?: ImageMetadata;
 }
+
+import githubImg from "@assets/logos/github.png"; // または @assets/images/...
+import githubWhiteImg from "@assets/logos/github-white.png";
+import xImg from "@assets/logos/x.png";
+import xWhiteImg from "@assets/logos/x-white.png";
+import zennImg from "@assets/logos/zenn.png";
+import atcoderImg from "@assets/logos/atcoder.png";
+import atcoderWhiteImg from "@assets/logos/atcoder-white.png";
+import astroImg from "@assets/logos/astro.png";
+import astroWhiteImg from "@assets/logos/astro-white.png";
+import tailwindImg from "@assets/logos/tailwind.png";
 
 export const socials: LinkItem[] = [
   {
     title: "GitHub",
     url: "https://github.com/suyasuyaTY",
     description: "@suyasuyaTY",
-    image: "/src/images/logos/github.png",
-    darkImage: "/src/images/logos/github-white.png",
+    image: githubImg,
+    darkImage: githubWhiteImg,
   },
   {
     title: "X (Twitter)",
     url: "https://twitter.com/suyasuyaTY",
     description: "@suyasuyaTY",
-    image: "/src/images/logos/x.png",
-    darkImage: "/src/images/logos/x-white.png",
+    image: xImg,
+    darkImage: xWhiteImg,
   },
   {
     title: "Zenn",
     url: "https://zenn.dev/suyasuyaTY",
     description: "技術記事の発信",
-    image: "/src/images/logos/zenn.png",
+    image: zennImg,
   },
   {
     title: "AtCoder",
     url: "https://atcoder.jp/users/suyasuyaTY",
     description: "競技プログラミングのプロフィール",
-    image: "/src/images/logos/atcoder.png",
-    darkImage: "/src/images/logos/atcoder-white.png",
+    image: atcoderImg,
+    darkImage: atcoderWhiteImg,
   },
 ];
 
 export const friends: LinkItem[] = [
-  {
-    title: "友人のブログ",
-    url: "https://friend-blog.example.com",
-    description: "大学の友人の技術ブログ。",
-    image: "https://friend-blog.example.com/logo.png",
-  },
+  // {
+  //   title: "友人のブログ",
+  //   url: "https://friend-blog.example.com",
+  //   description: "大学の友人の技術ブログ。",
+  //   image: "https://friend-blog.example.com/logo.png",
+  // },
 ];
 
 export const thanks: LinkItem[] = [
@@ -50,13 +63,13 @@ export const thanks: LinkItem[] = [
     title: "Astro",
     url: "https://astro.build",
     description: "このサイトの構築に使用しているフレームワーク。",
-    image: "/src/images/logos/astro.png",
-    darkImage: "/src/images/logos/astro-white.png",
+    image: astroImg,
+    darkImage: astroWhiteImg,
   },
   {
     title: "Tailwind CSS",
     url: "https://tailwindcss.com",
     description: "スタイリングに使用。",
-    image: "/src/images/logos/tailwind.png",
+    image: tailwindImg,
   },
 ];
