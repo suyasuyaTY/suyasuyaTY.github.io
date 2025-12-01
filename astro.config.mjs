@@ -10,7 +10,7 @@ import expressiveCode from "astro-expressive-code";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://suyasuyaty.github.io",
+  site: "https://suyasuyaTY.github.io",
   vite: {
     plugins: [tailwindcss()],
   },
