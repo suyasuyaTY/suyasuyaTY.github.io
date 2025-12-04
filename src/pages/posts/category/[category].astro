@@ -16,7 +16,8 @@ const { category } = Astro.params;
 
 const allBlogPosts = await getCollection("blog");
 const filteredPosts = allBlogPosts
-  .filter((post) => post.data.category === category && !post.data.draft)
+  .filter((post) => post.data.category === category)
+  .filter((post) => (import.meta.env.PROD ? post.data.draft !== true : true))
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 

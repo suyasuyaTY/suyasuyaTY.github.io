@@ -17,7 +17,7 @@ const { experiences, skills, achievements, hobbys } = profile;
 
 const allBlogPosts = await getCollection("blog");
 const recentPosts = allBlogPosts
-  .filter((post) => !post.data.draft)
+  .filter((post) => (import.meta.env.PROD ? post.data.draft !== true : true))
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime())
   .slice(0, 5);
 ---

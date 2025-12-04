@@ -6,9 +6,6 @@
     /* ベースカラーを適用 */
     background-color: var(--color-bg-base);
     color: var(--color-text-body);
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
   }
 
   h2 {
@@ -33,13 +30,13 @@
 @layer components {
   /* --- Widget / Card --- */
   .widget-card {
-    @apply rounded-2xl px-4 py-6 shadow-sm transition-colors duration-300;
+    @apply rounded-2xl px-4 py-6 shadow-sm;
     background-color: var(--color-bg-surface);
     color: var(--color-text-body);
   }
 
   .icon-badge {
-    @apply rounded p-1 transition-colors;
+    @apply rounded p-1;
     background-color: var(--color-primary-subtle);
     color: var(--color-primary);
   }
@@ -58,7 +55,7 @@
 
   /* --- Social Icon Button (Sidebar) --- */
   .btn-social {
-    @apply rounded-sm p-1 transition-colors duration-200;
+    @apply rounded-sm p-1;
     background-color: var(--color-primary-subtle);
 
     &:hover {
@@ -138,18 +135,34 @@
      Article Card (記事カード)
      ========================================= */
   .article-card {
-    @apply flex h-20 w-full rounded-sm transition-all duration-300;
+    @apply relative isolate flex h-20 w-full rounded-sm;
 
     /* 背景色: 薄いPrimary色 (theme.cssで定義した subtle を使用) */
     background-color: var(--color-primary-subtle);
 
-    &:hover {
-      /* ホバー時に少し濃く/薄くする調整 */
+    &::before {
+      content: "";
+      @apply absolute inset-0 -z-10 transition-opacity duration-300;
+
+      /* 初期状態は透明 */
+      opacity: 0;
+
+      /* ホバー時の色を設定 */
       background-color: color-mix(
         in srgb,
         var(--color-primary) 15%,
         transparent
       );
+
+      /* 重要: 親の background-color の上にこの ::before が乗るように、
+       親に isolate を指定し、ここは -z-10 にしています。
+       (スタッキングコンテキスト内では 背景 < 負のz-index < コンテンツ の順で描画されます)
+    */
+    }
+
+    /* ホバー時に擬似要素を表示 */
+    &:hover::before {
+      opacity: 1;
     }
   }
 

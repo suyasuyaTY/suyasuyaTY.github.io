@@ -36,7 +36,7 @@ export const socials: LinkItem[] = [
   },
   {
     title: "Zenn",
-    url: "https://zenn.dev/suyasuyaTY",
+    url: "https://zenn.dev/suyasuyaty",
     description: "技術記事の発信",
     image: zennImg,
   },
