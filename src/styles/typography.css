@@ -7,7 +7,7 @@
   --tw-prose-headings: var(--color-text-heading);
   --tw-prose-lead: var(--color-text-muted);
   --tw-prose-links: var(--color-primary);
-  --tw-prose-bold: var(--color-text-heading);
+  --tw-prose-bold: var(--color-primary);
   --tw-prose-counters: var(--color-primary); /* リストの数字 */
   --tw-prose-bullets: var(--color-primary); /* リストの点 */
   --tw-prose-hr: var(--color-border);
@@ -22,43 +22,52 @@
 
   /* --- Dark Mode (dark:prose-invert 適用時) --- */
   /* ここをすべて青基調のダーク用変数にマッピング */
-  --tw-prose-invert-body: var(--color-text-body-dark);
-  --tw-prose-invert-headings: var(--color-text-heading-dark);
-  --tw-prose-invert-lead: var(--color-text-muted-dark);
+  --tw-prose-invert-body: var(--color-text-body);
+  --tw-prose-invert-headings: var(--color-text-heading);
+  --tw-prose-invert-lead: var(--color-text-muted);
 
   /* リンクや強調は明るい青にする */
-  --tw-prose-invert-links: var(--color-primary-dark);
-  --tw-prose-invert-bold: var(--color-text-heading-dark);
+  --tw-prose-invert-links: var(--color-primary);
+  --tw-prose-invert-bold: var(--color-primary);
 
   /* リストの装飾も青系に */
-  --tw-prose-invert-counters: var(--color-primary-dark);
-  --tw-prose-invert-bullets: var(--color-primary-dark);
+  --tw-prose-invert-counters: var(--color-primary);
+  --tw-prose-invert-bullets: var(--color-primary);
 
   /* 境界線 */
   --tw-prose-invert-hr: var(--color-border-dark);
 
   /* 引用 */
-  --tw-prose-invert-quotes: var(--color-text-heading-dark);
-  --tw-prose-invert-quote-borders: var(--color-primary-dark);
+  --tw-prose-invert-quotes: var(--color-text-heading);
+  --tw-prose-invert-quote-borders: var(--color-primary);
 
   /* キャプション */
-  --tw-prose-invert-captions: var(--color-text-muted-dark);
+  --tw-prose-invert-captions: var(--color-text-muted);
 
   /* インラインコード */
-  --tw-prose-invert-code: var(--color-primary-dark);
+  --tw-prose-invert-code: var(--color-primary);
 
   /* コードブロック (pre) */
-  --tw-prose-invert-pre-code: var(--color-text-body-dark);
-  --tw-prose-invert-pre-bg: var(--color-bg-surface-dark);
+  --tw-prose-invert-pre-code: var(--color-text-body);
+  --tw-prose-invert-pre-bg: var(--color-bg-surface);
 
   /* テーブル */
-  --tw-prose-invert-th-borders: var(--color-border-dark);
-  --tw-prose-invert-td-borders: var(--color-border-dark);
+  --tw-prose-invert-th-borders: var(--color-border);
+  --tw-prose-invert-td-borders: var(--color-border);
 }
 
 /* =========================================
    Custom Elements Style
    ========================================= */
+@layer utilities {
+  .prose ol li ol {
+    list-style-type: lower-alpha;
+  }
+
+  .prose ol ol ol {
+    list-style-type: lower-roman;
+  }
+}
 
 @layer components {
   /* 1. インラインコードの背景色 (`code`) */
@@ -74,7 +83,7 @@
   .dark .prose :where(code):not(:where(pre *)) {
     /* Dark: 半透明の青背景 + 明るい青文字 */
     background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
-    color: var(--color-primary-dark);
+    color: var(--color-primary);
   }
 
   /* 2. インラインコードのバッククォート削除 */

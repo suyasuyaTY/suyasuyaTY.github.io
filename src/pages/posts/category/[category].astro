@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
+import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -21,7 +21,7 @@ const filteredPosts = allBlogPosts
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 
-<BaseLayout title={`${category} | suyasuyaTYの部屋`}>
+<Layout title={`${category} | suyasuyaTYの部屋`}>
   <h2>{category}</h2>
 
   <ul class="timeline-list my-4">
@@ -47,4 +47,4 @@ const filteredPosts = allBlogPosts
       ))
     }
   </ul>
-</BaseLayout>
+</Layout>

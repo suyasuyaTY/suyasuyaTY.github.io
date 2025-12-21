@@ -1,5 +1,5 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
+import Layout from "@layouts/Layout.astro";
 import { getCollection } from "astro:content";
 
 const allBlogPosts = await getCollection("blog");
@@ -8,7 +8,7 @@ const posts = allBlogPosts
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 
-<BaseLayout title="記事一覧 | suyasuyaTYの部屋">
+<Layout title="記事一覧 | suyasuyaTYの部屋">
   <h2>Posts</h2>
 
   <ul class="timeline-list my-4">
@@ -34,4 +34,4 @@ const posts = allBlogPosts
       ))
     }
   </ul>
-</BaseLayout>
+</Layout>
