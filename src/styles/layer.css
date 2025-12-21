@@ -43,7 +43,7 @@
 
   /* --- Navigation Link (Header) --- */
   .nav-link {
-    @apply flex items-center gap-2 rounded-md px-3 py-2 text-lg transition-colors duration-200;
+    @apply flex items-center gap-2 rounded-md px-4 py-2 transition-colors duration-200 md:text-lg;
     color: var(--color-text-body);
 
     &:hover {
@@ -128,41 +128,6 @@
       content: "";
       @apply absolute top-1/2 right-0 h-0.5 w-3 origin-[calc(100%-1px)_50%] -translate-y-1/2 -rotate-45 rounded-full;
       background-color: var(--color-primary);
-    }
-  }
-
-  /* =========================================
-     Article Card (記事カード)
-     ========================================= */
-  .article-card {
-    @apply relative isolate flex h-20 w-full rounded-sm;
-
-    /* 背景色: 薄いPrimary色 (theme.cssで定義した subtle を使用) */
-    background-color: var(--color-primary-subtle);
-
-    &::before {
-      content: "";
-      @apply absolute inset-0 -z-10 transition-opacity duration-300;
-
-      /* 初期状態は透明 */
-      opacity: 0;
-
-      /* ホバー時の色を設定 */
-      background-color: color-mix(
-        in srgb,
-        var(--color-primary) 15%,
-        transparent
-      );
-
-      /* 重要: 親の background-color の上にこの ::before が乗るように、
-       親に isolate を指定し、ここは -z-10 にしています。
-       (スタッキングコンテキスト内では 背景 < 負のz-index < コンテンツ の順で描画されます)
-    */
-    }
-
-    /* ホバー時に擬似要素を表示 */
-    &:hover::before {
-      opacity: 1;
     }
   }
 

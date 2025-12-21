@@ -1,0 +1,17 @@
+@reference "@styles/global.css";
+
+.articleCard {
+  @apply relative isolate flex h-20 w-full rounded-sm;
+  background-color: var(--color-primary-subtle);
+}
+
+.articleCard::before {
+  content: "";
+  @apply absolute inset-0 -z-10 transition-opacity duration-300;
+  opacity: 0;
+  background-color: color-mix(in srgb, var(--color-primary) 15%, transparent);
+}
+
+.articleCard:hover::before {
+  opacity: 1;
+}

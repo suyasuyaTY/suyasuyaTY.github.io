@@ -38,7 +38,6 @@ const customTransition = {
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <ClientRouter />
     <style is:global>
@@ -58,10 +57,12 @@ const customTransition = {
   </head>
   <body class="animate-background font-sans md:mx-auto md:max-w-7xl">
     <Header />
-    <div class="mx-auto mt-4 flex items-start gap-6">
+    <div
+      class="mx-auto mt-4 flex flex-col items-start gap-4 md:flex-row md:gap-6"
+    >
       <main
         transition:animate={customTransition}
-        class="widget-card order-2 flex w-full flex-col gap-6 md:w-4/5"
+        class="widget-card flex w-full flex-col gap-6 md:order-2 md:w-4/5"
       >
         <slot />
       </main>

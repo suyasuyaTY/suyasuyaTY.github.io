@@ -19,14 +19,15 @@ const navLinks = [
 
 <header
   id="main-header"
-  class="sticky top-0 z-10 rounded-md bg-(--color-bg-surface) shadow-md transition-transform duration-300 ease-in-out"
+  transition:persist
+  class="sticky top-0 z-10 bg-(--color-bg-surface) shadow-md transition-transform duration-300 ease-in-out md:rounded-md"
 >
   <nav class="mx-auto flex items-center justify-between px-4 py-6 md:px-6">
     <div class="text-xl font-bold" style="color: var(--color-primary);">
       <a href="/">suyasuyaTY</a>
     </div>
 
-    <ul class="flex gap-4 md:gap-12">
+    <ul class="hidden gap-4 md:flex md:gap-12">
       {
         navLinks.map((link) => (
           <li>
@@ -46,18 +47,49 @@ const navLinks = [
           aria-label="themeToggle"
           class="flex h-10 w-10 cursor-pointer items-center justify-center rounded hover:bg-(--color-primary-subtle)"
         >
+          <Icon name="heroicons:sun-solid" class="block h-5 w-5 dark:hidden" />
+          <Icon name="heroicons:moon-solid" class="hidden h-5 w-5 dark:block" />
+        </button>
+      </li>
+      <li class="text-lg md:hidden" style="color: var(--color-text-muted);">
+        <button
+          id="menuToggle"
+          aria-label="menuToggle"
+          aria-expanded="false"
+          class="flex h-10 w-10 cursor-pointer items-center justify-center rounded hover:bg-(--color-primary-subtle)"
+        >
           <Icon
-            name="heroicons:sun-20-solid"
-            class="block h-5 w-5 dark:hidden"
+            id="menuIconOpen"
+            name="heroicons:bars-3-16-solid"
+            class="block h-5 w-5"
           />
           <Icon
-            name="heroicons:moon-20-solid"
-            class="hidden h-5 w-5 dark:block"
+            id="menuIconClose"
+            name="heroicons:x-mark-solid"
+            class="hidden h-5 w-5"
           />
         </button>
       </li>
     </ul>
   </nav>
+
+  <div
+    id="mobileMenu"
+    class="pointer-events-none absolute top-full max-h-0 w-full overflow-hidden bg-(--color-bg-surface) shadow-2xl transition-[max-height] duration-200 ease-in md:hidden"
+  >
+    <ul class="flex flex-col">
+      {
+        navLinks.map((link) => (
+          <li>
+            <a href={link.href} class="nav-link">
+              <Icon name={link.icon} />
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
 </header>
 
 <script is:inline>
@@ -81,70 +113,118 @@ const navLinks = [
     }
   };
 
-  // 初回読み込み時に即実行
   initTheme();
 
-  // ページ遷移後（View Transitions）にもテーマを再適用する
-  // これがないと、遷移先でライトモードに戻ってしまうことがあります
   document.addEventListener("astro:after-swap", initTheme);
 </script>
 
-<script is:inline>
-  // メインの処理
+<script>
+  import { navigate } from "astro:transitions/client";
+
   document.addEventListener("astro:page-load", () => {
-    // ---------------------------------------------------------
-    // 1. ダークモード切り替えボタンの処理
-    // ---------------------------------------------------------
-    const themeToggleBtn = document.getElementById("themeToggle");
-    if (themeToggleBtn) {
-      themeToggleBtn.addEventListener("click", () => {
-        const element = document.documentElement;
-        element.classList.toggle("dark");
-        const isDark = element.classList.contains("dark");
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-      });
-    }
-
-    // ---------------------------------------------------------
-    // 2. スクロール処理 (重複登録防止つき)
-    // ---------------------------------------------------------
+    const menuToggleBtn = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const iconOpen = document.getElementById("menuIconOpen");
+    const iconClose = document.getElementById("menuIconClose");
     const header = document.getElementById("main-header");
-    let lastScrollTop = 0;
+    const themeToggleBtn = document.getElementById("themeToggle");
 
-    const handleScroll = () => {
-      // ヘッダーが存在しないページでは何もしない
-      if (!header) return;
+    const isInitialized = menuToggleBtn?.dataset.init === "true";
+    const menuCloseDurationMs = 200;
 
-      const currentScrollTop =
-        window.scrollY || document.documentElement.scrollTop;
-
-      if (
-        currentScrollTop > lastScrollTop &&
-        currentScrollTop > header.offsetHeight
-      ) {
-        // 下にスクロール & ヘッダーより下にいる時 -> 隠す
-        header.classList.add("-translate-y-full");
-      } else {
-        // 上にスクロール -> 表示
-        header.classList.remove("-translate-y-full");
-      }
-
-      lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    // --- モバイルメニュー開閉 ---
+    const closeMenu = () => {
+      if (!mobileMenu || !menuToggleBtn) return;
+      mobileMenu.classList.remove("max-h-64", "pointer-events-auto");
+      mobileMenu.classList.add("max-h-0", "pointer-events-none");
+      menuToggleBtn.setAttribute("aria-expanded", "false");
+      iconOpen?.classList.remove("hidden");
+      iconClose?.classList.add("hidden");
     };
 
-    if (header) {
-      // イベント登録 (passive: true はスクロール性能向上のため)
-      window.addEventListener("scroll", handleScroll, { passive: true });
+    const toggleMenu = () => {
+      if (!mobileMenu || !menuToggleBtn) return;
+      const willOpen = menuToggleBtn.getAttribute("aria-expanded") !== "true";
+      menuToggleBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      if (willOpen) {
+        mobileMenu.classList.remove("max-h-0", "pointer-events-none");
+        mobileMenu.classList.add("max-h-64", "pointer-events-auto");
+      } else {
+        closeMenu();
+      }
+      iconOpen?.classList.toggle("hidden", willOpen);
+      iconClose?.classList.toggle("hidden", !willOpen);
+    };
+
+    if (!isInitialized) {
+      // --- ダークモード切り替え ---
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+          const element = document.documentElement;
+          element.classList.toggle("dark");
+          const isDark = element.classList.contains("dark");
+          localStorage.setItem("theme", isDark ? "dark" : "light");
+        });
+      }
+
+      if (menuToggleBtn) {
+        menuToggleBtn.addEventListener("click", toggleMenu);
+        // 初期化済みフラグを立てる（これが重要です）
+        menuToggleBtn.dataset.init = "true";
+      }
+
+      // --- リンククリックで閉じる処理 ---
+      const menuLinks = mobileMenu?.querySelectorAll("a");
+      menuLinks?.forEach((link) => {
+        link.addEventListener("click", (event) => {
+          if (menuToggleBtn?.getAttribute("aria-expanded") !== "true") return;
+          const href = link.getAttribute("href");
+          if (!href) return;
+          event.preventDefault();
+          closeMenu();
+          window.setTimeout(() => {
+            navigate(href);
+          }, menuCloseDurationMs);
+        });
+      });
+
+      // --- リサイズ対策 ---
+      window.addEventListener("resize", () => {
+        if (window.matchMedia("(min-width: 768px)").matches) closeMenu();
+      });
+
+      // --- スクロール処理 ---
+      let lastScrollTop = 0;
+      const handleScroll = () => {
+        if (!header) return;
+        if (menuToggleBtn?.getAttribute("aria-expanded") === "true") return;
+        const currentScrollTop =
+          window.scrollY || document.documentElement.scrollTop;
+        if (
+          currentScrollTop > lastScrollTop &&
+          currentScrollTop > header.offsetHeight
+        ) {
+          header.classList.add("-translate-y-full");
+        } else {
+          header.classList.remove("-translate-y-full");
+        }
+        lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+      };
+
+      if (header) {
+        // スクロールイベントは重複しても大きな問題になりにくいですが、念のため
+        // persistされている場合は既存のリスナーが残っているので追加しません。
+        // ただしスクロールリスナーの重複除去は複雑なので、今回は簡易的に
+        // dataset.init でガードされたブロックの外には記述しません。
+        // ※厳密にはスクロールイベントもガード内に入れるか、クリーンアップが必要ですが、
+        // 今回のガード方式であれば、page-loadが走っても再登録されないので安全です。
+        window.addEventListener("scroll", handleScroll, { passive: true });
+      }
     }
 
-    // ★重要: ページを離れるときにイベントを削除する
-    // これをしないと、ページ移動のたびにスクロール監視が積み重なって重くなります
-    document.addEventListener(
-      "astro:before-swap",
-      () => {
-        window.removeEventListener("scroll", handleScroll);
-      },
-      { once: true }
-    );
+    if (header && header.dataset.swapInit !== "true") {
+      document.addEventListener("astro:before-swap", closeMenu);
+      header.dataset.swapInit = "true";
+    }
   });
 </script>
