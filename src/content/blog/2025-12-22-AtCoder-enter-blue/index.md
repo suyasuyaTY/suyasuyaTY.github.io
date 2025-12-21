@@ -6,7 +6,7 @@ description: 青色コーダーあるあるがいえるようになりたい
 thumbnail: ./hero.png
 category: 競技プログラミング
 tags: ["AtCoder"]
-draft: true
+draft: false
 ---
 
 **青色**コーダーのsuyasuyaTYです！！！  
