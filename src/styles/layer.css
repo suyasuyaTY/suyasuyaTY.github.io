@@ -80,58 +80,6 @@
   }
 
   /* =========================================
-     Link Card (リンクカード)
-     ========================================= */
-  .link-card {
-    @apply flex h-full items-center gap-4 overflow-hidden rounded-xl border p-4 transition-all duration-300;
-
-    /* Colors */
-    background-color: var(--color-bg-surface);
-    border-color: var(--color-border);
-
-    &:hover {
-      @apply pr-12 shadow-md;
-      border-color: var(--color-primary);
-      /* 背景を薄いPrimary色に */
-      background-color: color-mix(
-        in srgb,
-        var(--color-primary) 5%,
-        transparent
-      );
-    }
-  }
-
-  /* 矢印アニメーションのラッパー */
-  .link-card-arrow-container {
-    @apply relative flex h-18 w-18 shrink-0 items-center justify-center duration-300;
-  }
-
-  /* 矢印本体 (擬似要素の複雑な記述をここにまとめる) */
-  .link-card-arrow {
-    @apply relative block h-0.5 w-0 rounded-full transition-all duration-300 ease-out;
-    background-color: var(--color-primary);
-
-    /* ホバー時の線の伸び */
-    .group:hover & {
-      @apply w-6;
-    }
-
-    /* 矢印の先端 (上) */
-    &::before {
-      content: "";
-      @apply absolute top-1/2 right-0 h-0.5 w-3 origin-[calc(100%-1px)_50%] -translate-y-1/2 rotate-45 rounded-full;
-      background-color: var(--color-primary);
-    }
-
-    /* 矢印の先端 (下) */
-    &::after {
-      content: "";
-      @apply absolute top-1/2 right-0 h-0.5 w-3 origin-[calc(100%-1px)_50%] -translate-y-1/2 -rotate-45 rounded-full;
-      background-color: var(--color-primary);
-    }
-  }
-
-  /* =========================================
      Timeline (記事一覧)
      ========================================= */
 

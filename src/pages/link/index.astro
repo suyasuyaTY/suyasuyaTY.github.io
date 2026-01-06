@@ -1,29 +1,15 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import { socials, friends, thanks } from "./link.ts";
+import { friends } from "./link.ts";
 
 import LinkCard from "@components/LinkCard/LinkCard.astro";
 ---
 
-<Layout title="リンク | suyasuyaTYの部屋">
-  <section>
-    <h2>External service</h2>
-    <ul class="grid grid-cols-1 gap-6 py-4 md:grid-cols-2">
-      {socials.map((item) => <LinkCard {...item} />)}
-    </ul>
-  </section>
-
+<Layout title="リンク | すやすやログ">
   <section>
     <h2>Friends</h2>
     <ul class="grid grid-cols-1 gap-6 py-4 md:grid-cols-2">
       {friends.map((item) => <LinkCard {...item} />)}
-    </ul>
-  </section>
-
-  <section>
-    <h2>Powered by</h2>
-    <ul class="grid grid-cols-1 gap-6 py-4 md:grid-cols-2">
-      {thanks.map((item) => <LinkCard {...item} />)}
     </ul>
   </section>
 </Layout>
