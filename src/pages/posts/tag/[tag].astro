@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import PostTimeline from "@components/PostTimeline/PostTimeline.astro";
+import PostsWithTaxonomy from "@components/PostTaxonomy/PostsWithTaxonomy.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -22,8 +23,10 @@ const filteredPosts = allBlogPosts
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 
-<Layout title={`#${tag} | すやすやログ`}>
-  <h2>#{tag}</h2>
+<Layout title={`#${tag} | すやすやログ`} bare>
+  <PostsWithTaxonomy>
+    <h2>#{tag}</h2>
 
-  <PostTimeline posts={filteredPosts} />
+    <PostTimeline posts={filteredPosts} />
+  </PostsWithTaxonomy>
 </Layout>

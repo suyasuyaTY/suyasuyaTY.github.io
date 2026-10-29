@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import PostTimeline from "@components/PostTimeline/PostTimeline.astro";
+import PostsWithTaxonomy from "@components/PostTaxonomy/PostsWithTaxonomy.astro";
 import { getCollection } from "astro:content";
 
 const allBlogPosts = await getCollection("blog");
@@ -9,8 +10,10 @@ const posts = allBlogPosts
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 
-<Layout title="記事一覧 | すやすやログ">
-  <h2>Posts</h2>
+<Layout title="記事一覧 | すやすやログ" bare>
+  <PostsWithTaxonomy>
+    <h2>Posts</h2>
 
-  <PostTimeline posts={posts} />
+    <PostTimeline posts={posts} />
+  </PostsWithTaxonomy>
 </Layout>

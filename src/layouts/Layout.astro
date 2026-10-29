@@ -1,7 +1,6 @@
 ---
 import { ClientRouter } from "astro:transitions";
 import Header from "@components/common/Header.astro";
-import Sidebar from "@components/common/Sidebar.astro";
 import "@styles/global.css";
 
 export interface Props {
@@ -9,6 +8,8 @@ export interface Props {
   description?: string;
   ogImage?: string;
   ogType?: "website" | "article";
+  // true のときは main をカードにせず、ページ側でコンテナを組み立てる
+  bare?: boolean;
 }
 
 const {
@@ -16,6 +17,7 @@ const {
   description = "寿司と競プロが好きです",
   ogImage = "/ogp.png",
   ogType = "website",
+  bare = false,
 } = Astro.props;
 
 const canonicalUrl = Astro.site
@@ -91,9 +93,8 @@ const customTransition = {
         }
       }
 
-      /* ヘッダーとサイドバーは消さずに、新しい位置へ上下にスライドさせる */
-      ::view-transition-group(header),
-      ::view-transition-group(sidebar) {
+      /* ヘッダーは消さずに、新しい位置へ上下にスライドさせる */
+      ::view-transition-group(header) {
         animation-duration: 0.35s;
         animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
       }
@@ -109,22 +110,12 @@ const customTransition = {
   </head>
   <body class="animate-background font-sans md:mx-auto md:max-w-7xl">
     <Header />
-    <div class="mx-auto mt-4 flex flex-col items-start gap-4 md:flex-row md:gap-6">
-      <main
-        transition:animate={customTransition}
-        class="widget-card flex w-full flex-col gap-6 md:order-2 md:w-4/5"
-      >
-        <slot />
-      </main>
-
-      <aside
-        transition:name="sidebar"
-        transition:animate="initial"
-        class="order-1 flex w-full shrink-0 flex-col gap-6 md:w-1/5"
-      >
-        <Sidebar />
-      </aside>
-    </div>
+    <main
+      transition:animate={customTransition}
+      class:list={["mt-4 flex w-full flex-col gap-6", { "widget-card": !bare }]}
+    >
+      <slot />
+    </main>
   </body>
 </html>
 
