@@ -1,0 +1,79 @@
+---
+import type { MarkdownHeading } from "astro";
+import { Icon } from "astro-icon/components";
+import TableOfContents from "./TableOfContents.astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+---
+
+{/* スマホ・タブレット用: 右下のボタンを押すと目次が開く */}
+<div class="lg:hidden">
+  <button
+    type="button"
+    data-toc-open
+    aria-label="目次を開く"
+    aria-haspopup="dialog"
+    aria-controls="tocDrawer"
+    class="fixed right-4 bottom-4 z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-(--color-primary) text-white shadow-lg transition-colors hover:bg-(--color-primary-hover)"
+  >
+    <Icon name="heroicons:list-bullet-20-solid" class="h-6 w-6" />
+  </button>
+
+  <dialog
+    id="tocDrawer"
+    aria-label="目次"
+    class="fixed inset-auto right-4 bottom-20 m-0 max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl bg-(--color-bg-surface) p-4 text-(--color-text-body) shadow-2xl backdrop:bg-black/30"
+  >
+    <div class="mb-3 flex items-center justify-between">
+      <p class="font-bold text-(--color-text-heading)">目次</p>
+      <button
+        type="button"
+        data-toc-close
+        aria-label="目次を閉じる"
+        class="flex h-8 w-8 cursor-pointer items-center justify-center rounded text-(--color-text-muted) hover:bg-(--color-primary-subtle)"
+      >
+        <Icon name="heroicons:x-mark-20-solid" class="h-5 w-5" />
+      </button>
+    </div>
+    <nav aria-label="目次">
+      <TableOfContents headings={headings} />
+    </nav>
+  </dialog>
+</div>
+
+<script>
+  const setup = () => {
+    const dialog = document.getElementById(
+      "tocDrawer",
+    ) as HTMLDialogElement | null;
+    const openBtn =
+      document.querySelector<HTMLButtonElement>("[data-toc-open]");
+    if (!dialog || !openBtn) return;
+
+    openBtn.addEventListener("click", () => dialog.showModal());
+
+    dialog
+      .querySelector("[data-toc-close]")
+      ?.addEventListener("click", () => dialog.close());
+
+    // 背景 (ダイアログの外側) のタップで閉じる
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+
+    // 項目を押したら閉じてから見出しへ移動する
+    dialog.querySelectorAll("a[data-toc-link]").forEach((link) => {
+      link.addEventListener("click", () => dialog.close());
+    });
+
+    dialog.addEventListener("close", () =>
+      openBtn.focus({ preventScroll: true }),
+    );
+  };
+
+  document.addEventListener("astro:page-load", setup);
+</script>
