@@ -3,6 +3,7 @@ import { Icon } from "astro-icon/components";
 import { getCollection, getEntry, render } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "@layouts/Layout.astro";
+import TableOfContents from "@components/TableOfContents/TableOfContents.astro";
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection("blog");
@@ -20,6 +21,11 @@ if (!entry) {
   throw new Error("Could not find blog post");
 }
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
+
+const formatDate = (date: Date) => date.toISOString().split("T")[0];
+const createdAt = formatDate(entry.data.createdAt);
+const updatedAt = formatDate(entry.data.updatedAt);
+const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
 ---
 
 <Layout
@@ -28,28 +34,32 @@ const { Content, headings, remarkPluginFrontmatter } = await render(entry);
   ogImage={entry.data.thumbnail.src}
   ogType="article"
 >
-  <article>
-    <div>
-      <h1 class="text-3xl font-bold text-(--color-text-heading)">
+  <article class="mx-auto w-full max-w-[42rem] xl:grid xl:max-w-none xl:grid-cols-[minmax(0,42rem)_13rem] xl:justify-between xl:gap-x-8">
+    <header class="xl:col-span-2">
+      <h1 class="text-2xl font-bold text-(--color-text-heading) md:text-3xl">
         {remarkPluginFrontmatter["title"]}
       </h1>
 
-      <div class="text-md my-4 flex gap-4 font-bold text-(--color-text-muted)">
+      <div class="my-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-bold text-(--color-text-muted) md:text-base">
         {/* 日付 */}
         <div class="flex items-center gap-2">
           <Icon
             name="heroicons:calendar-days-20-solid"
-            size={32}
+            size={28}
             class="icon-badge"
           />
-          <span>
-            {remarkPluginFrontmatter["createdAt"].toISOString().split("T")[0]}
-          </span>
+          <time datetime={createdAt}>{createdAt}</time>
+          {updatedAt !== createdAt && (
+            <span class="flex items-center gap-1">
+              <Icon name="heroicons:arrow-path-20-solid" size={16} />
+              <time datetime={updatedAt}>{updatedAt}</time>
+            </span>
+          )}
         </div>
 
         {/* カテゴリ */}
         <div class="flex items-center gap-2">
-          <Icon name="heroicons:tag" size={32} class="icon-badge" />
+          <Icon name="heroicons:tag" size={28} class="icon-badge" />
           <a
             href={`/posts/category/${entry.data.category}`}
             class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
@@ -60,23 +70,21 @@ const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 
         {/* タグ */}
         <div class="flex items-center gap-2">
-          <Icon name="heroicons:hashtag" size={32} class="icon-badge" />
-          <div class="flex gap-1">
-            {
-              entry.data.tags.map((tag, index) => (
-                <>
-                  <a
-                    href={`/posts/tag/${tag}`}
-                    class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
-                  >
-                    {tag}
-                  </a>
-                  {index < entry.data.tags.length - 1 && (
-                    <span class="py-1">/</span>
-                  )}
-                </>
-              ))
-            }
+          <Icon name="heroicons:hashtag" size={28} class="icon-badge" />
+          <div class="flex flex-wrap gap-1">
+            {entry.data.tags.map((tag, index) => (
+              <>
+                <a
+                  href={`/posts/tag/${tag}`}
+                  class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
+                >
+                  {tag}
+                </a>
+                {index < entry.data.tags.length - 1 && (
+                  <span class="py-1">/</span>
+                )}
+              </>
+            ))}
           </div>
         </div>
       </div>
@@ -93,10 +101,31 @@ const { Content, headings, remarkPluginFrontmatter } = await render(entry);
           class="aspect-[1.91/1] h-full w-full object-cover"
         />
       </div>
+    </header>
 
-      <div class="prose prose-blue dark:prose-invert max-w-none">
-        <Content />
-      </div>
+    {/* 目次 (スマホ・タブレットは折りたたみ、広い画面は右側に固定) */}
+    {hasToc && (
+      <details class="toc-details mb-8 rounded-xl border border-(--color-border) xl:hidden">
+        <summary class="cursor-pointer px-4 py-3 font-bold text-(--color-text-heading)">
+          目次
+        </summary>
+        <nav aria-label="目次" class="px-2 pb-3">
+          <TableOfContents headings={headings} />
+        </nav>
+      </details>
+    )}
+
+    <div class="prose prose-blue dark:prose-invert max-w-none min-w-0">
+      <Content />
     </div>
+
+    {hasToc && (
+      <nav aria-label="目次" class="hidden xl:block">
+        <div class="sticky top-28">
+          <p class="mb-2 px-2 font-bold text-(--color-text-heading)">目次</p>
+          <TableOfContents headings={headings} />
+        </div>
+      </nav>
+    )}
   </article>
 </Layout>

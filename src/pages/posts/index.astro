@@ -1,5 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import PostTimeline from "@components/PostTimeline/PostTimeline.astro";
 import { getCollection } from "astro:content";
 
 const allBlogPosts = await getCollection("blog");
@@ -11,27 +12,5 @@ const posts = allBlogPosts
 <Layout title="記事一覧 | すやすやログ">
   <h2>Posts</h2>
 
-  <ul class="timeline-list my-4">
-    {
-      posts.map((post) => (
-        <li class="timeline-item">
-          <a href={`/posts/${post.id}`} class="flex items-baseline gap-4">
-            <div class="timeline-date">
-              {post.data.createdAt.toISOString().split("T")[0]}
-            </div>
-
-            <div class="min-w-0 flex-1 truncate text-xl font-semibold text-(--color-text-heading)">
-              {post.data.title}
-            </div>
-
-            <div class="w-[10%] shrink-0 truncate text-right">
-              {post.data.tags.map((tag) => (
-                <span class="timeline-tag">#{tag}</span>
-              ))}
-            </div>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  <PostTimeline posts={posts} />
 </Layout>

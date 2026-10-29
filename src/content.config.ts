@@ -36,6 +36,7 @@ const profiles = defineCollection({
       z.object({
         title: z.string(),
         date: z.string(),
+        category: z.enum(["IT", "英語"]),
       }),
     ),
 
@@ -45,7 +46,7 @@ const profiles = defineCollection({
         subTitle: z.string(),
         description: z.string(),
         date: z.string(),
-        category: z.enum(["職歴", "学歴"]),
+        category: z.enum(["仕事", "学業"]),
         href: z.string().url().optional(),
       }),
     ),

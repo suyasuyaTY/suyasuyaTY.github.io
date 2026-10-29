@@ -15,11 +15,21 @@ const navLinks = [
   },
   { href: "/link", label: "Link", icon: "heroicons:link-20-solid" },
 ];
+
+// ヘッダーは transition:persist で使い回されるので、遷移後はスクリプト側で更新する
+const getAriaCurrent = (href: string, pathname: string) => {
+  const path = pathname.replace(/\/$/, "") || "/";
+  if (path === href) return "page";
+  if (href !== "/" && path.startsWith(`${href}/`)) return "true";
+  return undefined;
+};
 ---
 
 <header
   id="main-header"
   transition:persist
+  transition:name="header"
+  transition:animate="initial"
   class="sticky top-0 z-10 bg-(--color-bg-surface) shadow-md transition-transform duration-300 ease-in-out md:rounded-md"
 >
   <nav class="mx-auto flex items-center justify-between px-4 py-6 md:px-6">
@@ -28,23 +38,25 @@ const navLinks = [
     </div>
 
     <ul class="hidden gap-4 md:flex md:gap-12">
-      {
-        navLinks.map((link) => (
-          <li>
-            <a href={link.href} class="nav-link">
-              <Icon name={link.icon} />
-              {link.label}
-            </a>
-          </li>
-        ))
-      }
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="nav-link"
+            aria-current={getAriaCurrent(link.href, Astro.url.pathname)}
+          >
+            <Icon name={link.icon} />
+            {link.label}
+          </a>
+        </li>
+      ))}
     </ul>
 
     <ul class="flex gap-2">
       <li class="text-lg" style="color: var(--color-text-muted);">
         <button
           id="themeToggle"
-          aria-label="themeToggle"
+          aria-label="テーマ切り替え"
           class="flex h-10 w-10 cursor-pointer items-center justify-center rounded hover:bg-(--color-primary-subtle)"
         >
           <Icon name="heroicons:sun-solid" class="block h-5 w-5 dark:hidden" />
@@ -54,7 +66,8 @@ const navLinks = [
       <li class="text-lg md:hidden" style="color: var(--color-text-muted);">
         <button
           id="menuToggle"
-          aria-label="menuToggle"
+          aria-label="メニュー"
+          aria-controls="mobileMenu"
           aria-expanded="false"
           class="flex h-10 w-10 cursor-pointer items-center justify-center rounded hover:bg-(--color-primary-subtle)"
         >
@@ -75,19 +88,22 @@ const navLinks = [
 
   <div
     id="mobileMenu"
-    class="pointer-events-none absolute top-full max-h-0 w-full overflow-hidden bg-(--color-bg-surface) shadow-2xl transition-[max-height] duration-200 ease-in md:hidden"
+    data-open="false"
+    class="invisible absolute top-full w-full origin-top -translate-y-2 scale-y-95 bg-(--color-bg-surface) opacity-0 shadow-2xl transition-[opacity,transform,visibility] duration-200 ease-out data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:scale-y-100 data-[open=true]:opacity-100 md:hidden"
   >
-    <ul class="flex flex-col">
-      {
-        navLinks.map((link) => (
-          <li>
-            <a href={link.href} class="nav-link">
-              <Icon name={link.icon} />
-              {link.label}
-            </a>
-          </li>
-        ))
-      }
+    <ul class="flex flex-col py-2">
+      {navLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class="nav-link"
+            aria-current={getAriaCurrent(link.href, Astro.url.pathname)}
+          >
+            <Icon name={link.icon} />
+            {link.label}
+          </a>
+        </li>
+      ))}
     </ul>
   </div>
 </header>
@@ -121,110 +137,108 @@ const navLinks = [
 <script>
   import { navigate } from "astro:transitions/client";
 
-  document.addEventListener("astro:page-load", () => {
+  const menuCloseDurationMs = 200;
+
+  const getAriaCurrent = (href: string, pathname: string) => {
+    const path = pathname.replace(/\/$/, "") || "/";
+    if (path === href) return "page";
+    if (href !== "/" && path.startsWith(`${href}/`)) return "true";
+    return null;
+  };
+
+  // --- 現在地のハイライト ---
+  const updateAriaCurrent = () => {
+    document
+      .querySelectorAll<HTMLAnchorElement>("#main-header .nav-link")
+      .forEach((link) => {
+        const current = getAriaCurrent(
+          link.getAttribute("href") ?? "",
+          location.pathname,
+        );
+        if (current) link.setAttribute("aria-current", current);
+        else link.removeAttribute("aria-current");
+      });
+  };
+
+  const setup = () => {
     const menuToggleBtn = document.getElementById("menuToggle");
     const mobileMenu = document.getElementById("mobileMenu");
     const iconOpen = document.getElementById("menuIconOpen");
     const iconClose = document.getElementById("menuIconClose");
     const header = document.getElementById("main-header");
     const themeToggleBtn = document.getElementById("themeToggle");
+    if (!menuToggleBtn || !mobileMenu || !header) return;
 
-    const isInitialized = menuToggleBtn?.dataset.init === "true";
-    const menuCloseDurationMs = 200;
+    // ヘッダーは persist されるので、イベント登録は最初の1回だけ
+    if (header.dataset.init === "true") return;
+    header.dataset.init = "true";
+
+    // --- ダークモード切り替え ---
+    themeToggleBtn?.addEventListener("click", () => {
+      const isDark = document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme", isDark ? "dark" : "light");
+    });
 
     // --- モバイルメニュー開閉 ---
-    const closeMenu = () => {
-      if (!mobileMenu || !menuToggleBtn) return;
-      mobileMenu.classList.remove("max-h-64", "pointer-events-auto");
-      mobileMenu.classList.add("max-h-0", "pointer-events-none");
-      menuToggleBtn.setAttribute("aria-expanded", "false");
-      iconOpen?.classList.remove("hidden");
-      iconClose?.classList.add("hidden");
-    };
+    const isOpen = () => menuToggleBtn.getAttribute("aria-expanded") === "true";
 
-    const toggleMenu = () => {
-      if (!mobileMenu || !menuToggleBtn) return;
-      const willOpen = menuToggleBtn.getAttribute("aria-expanded") !== "true";
-      menuToggleBtn.setAttribute("aria-expanded", willOpen ? "true" : "false");
-      if (willOpen) {
-        mobileMenu.classList.remove("max-h-0", "pointer-events-none");
-        mobileMenu.classList.add("max-h-64", "pointer-events-auto");
-      } else {
+    const setMenu = (open: boolean) => {
+      mobileMenu.dataset.open = String(open);
+      menuToggleBtn.setAttribute("aria-expanded", String(open));
+      iconOpen?.classList.toggle("hidden", open);
+      iconClose?.classList.toggle("hidden", !open);
+    };
+    const closeMenu = () => setMenu(false);
+
+    menuToggleBtn.addEventListener("click", () => setMenu(!isOpen()));
+
+    // メニュー外のタップと Esc で閉じる
+    document.addEventListener("click", (event) => {
+      if (isOpen() && !header.contains(event.target as Node)) closeMenu();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !isOpen()) return;
+      closeMenu();
+      menuToggleBtn.focus();
+    });
+
+    // リンククリック時は、メニューが閉じてから遷移する
+    mobileMenu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (!isOpen()) return;
+        const href = link.getAttribute("href");
+        if (!href) return;
+        event.preventDefault();
         closeMenu();
-      }
-      iconOpen?.classList.toggle("hidden", willOpen);
-      iconClose?.classList.toggle("hidden", !willOpen);
-    };
-
-    if (!isInitialized) {
-      // --- ダークモード切り替え ---
-      if (themeToggleBtn) {
-        themeToggleBtn.addEventListener("click", () => {
-          const element = document.documentElement;
-          element.classList.toggle("dark");
-          const isDark = element.classList.contains("dark");
-          localStorage.setItem("theme", isDark ? "dark" : "light");
-        });
-      }
-
-      if (menuToggleBtn) {
-        menuToggleBtn.addEventListener("click", toggleMenu);
-        // 初期化済みフラグを立てる（これが重要です）
-        menuToggleBtn.dataset.init = "true";
-      }
-
-      // --- リンククリックで閉じる処理 ---
-      const menuLinks = mobileMenu?.querySelectorAll("a");
-      menuLinks?.forEach((link) => {
-        link.addEventListener("click", (event) => {
-          if (menuToggleBtn?.getAttribute("aria-expanded") !== "true") return;
-          const href = link.getAttribute("href");
-          if (!href) return;
-          event.preventDefault();
-          closeMenu();
-          window.setTimeout(() => {
-            navigate(href);
-          }, menuCloseDurationMs);
-        });
+        window.setTimeout(() => navigate(href), menuCloseDurationMs);
       });
+    });
 
-      // --- リサイズ対策 ---
-      window.addEventListener("resize", () => {
-        if (window.matchMedia("(min-width: 768px)").matches) closeMenu();
-      });
+    window.addEventListener("resize", () => {
+      if (window.matchMedia("(min-width: 768px)").matches) closeMenu();
+    });
+    document.addEventListener("astro:before-swap", closeMenu);
 
-      // --- スクロール処理 ---
-      let lastScrollTop = 0;
-      const handleScroll = () => {
-        if (!header) return;
-        if (menuToggleBtn?.getAttribute("aria-expanded") === "true") return;
-        const currentScrollTop =
-          window.scrollY || document.documentElement.scrollTop;
-        if (
+    // --- スクロールで隠す ---
+    let lastScrollTop = 0;
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (isOpen()) return;
+        const currentScrollTop = window.scrollY;
+        header.classList.toggle(
+          "-translate-y-full",
           currentScrollTop > lastScrollTop &&
-          currentScrollTop > header.offsetHeight
-        ) {
-          header.classList.add("-translate-y-full");
-        } else {
-          header.classList.remove("-translate-y-full");
-        }
-        lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
-      };
+            currentScrollTop > header.offsetHeight,
+        );
+        lastScrollTop = Math.max(currentScrollTop, 0);
+      },
+      { passive: true },
+    );
+  };
 
-      if (header) {
-        // スクロールイベントは重複しても大きな問題になりにくいですが、念のため
-        // persistされている場合は既存のリスナーが残っているので追加しません。
-        // ただしスクロールリスナーの重複除去は複雑なので、今回は簡易的に
-        // dataset.init でガードされたブロックの外には記述しません。
-        // ※厳密にはスクロールイベントもガード内に入れるか、クリーンアップが必要ですが、
-        // 今回のガード方式であれば、page-loadが走っても再登録されないので安全です。
-        window.addEventListener("scroll", handleScroll, { passive: true });
-      }
-    }
-
-    if (header && header.dataset.swapInit !== "true") {
-      document.addEventListener("astro:before-swap", closeMenu);
-      header.dataset.swapInit = "true";
-    }
+  document.addEventListener("astro:page-load", () => {
+    setup();
+    updateAriaCurrent();
   });
 </script>

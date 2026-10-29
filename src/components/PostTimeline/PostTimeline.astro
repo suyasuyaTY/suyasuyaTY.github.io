@@ -1,0 +1,37 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  posts: CollectionEntry<"blog">[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul class="timeline-list my-4">
+  {posts.map((post) => {
+    const date = post.data.createdAt.toISOString().split("T")[0];
+    return (
+      <li class="timeline-item">
+        <a
+          href={`/posts/${post.id}`}
+          class="flex flex-col gap-1 md:flex-row md:items-baseline md:gap-4"
+        >
+          <time datetime={date} class="timeline-date">
+            {date}
+          </time>
+
+          <div class="line-clamp-2 min-w-0 flex-1 text-lg font-semibold text-(--color-text-heading) md:truncate md:text-xl">
+            {post.data.title}
+          </div>
+
+          <div class="flex flex-wrap gap-x-2 md:max-w-[35%] md:shrink-0 md:flex-nowrap md:justify-end md:truncate">
+            {post.data.tags.map((tag) => (
+              <span class="timeline-tag">#{tag}</span>
+            ))}
+          </div>
+        </a>
+      </li>
+    );
+  })}
+</ul>

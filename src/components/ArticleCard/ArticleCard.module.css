@@ -1,4 +1,4 @@
-@reference "@styles/global.css";
+@reference "../../styles/global.css";
 
 .articleCard {
   @apply relative isolate flex h-20 w-full rounded-sm;

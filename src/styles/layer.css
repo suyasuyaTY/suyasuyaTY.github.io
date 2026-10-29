@@ -51,6 +51,12 @@
       background-color: var(--color-primary-subtle);
       color: var(--color-primary);
     }
+
+    /* 現在地 */
+    &[aria-current] {
+      @apply font-bold;
+      color: var(--color-primary);
+    }
   }
 
   /* --- Social Icon Button (Sidebar) --- */
@@ -85,7 +91,7 @@
 
   /* リスト全体（垂直の点線） */
   .timeline-list {
-    @apply relative ml-28 flex flex-col;
+    @apply relative flex flex-col md:ml-28;
 
     /* 縦の点線 */
     &::before {
@@ -97,7 +103,7 @@
 
   /* 各記事の行 */
   .timeline-item {
-    @apply relative rounded-r-md py-1 pr-4 pl-10 transition-colors duration-200;
+    @apply relative rounded-r-md py-2 pr-4 pl-10 transition-colors duration-200 md:py-1;
 
     /* ホバー時の背景色 */
     &:hover {
@@ -123,9 +129,9 @@
     }
   }
 
-  /* 左側の日付ラベル */
+  /* 日付ラベル (スマホではタイトルの上、PC では線の左側) */
   .timeline-date {
-    @apply absolute top-1/2 right-full w-24 -translate-y-1/2 rounded-l-md py-2 pr-4 pl-6 text-right text-sm whitespace-nowrap transition-colors;
+    @apply text-sm whitespace-nowrap transition-colors md:absolute md:top-1/2 md:right-full md:w-24 md:-translate-y-1/2 md:rounded-l-md md:py-2 md:pr-4 md:pl-6 md:text-right;
 
     color: var(--color-text-muted);
 
@@ -137,7 +143,7 @@
   }
 
   .timeline-tag {
-    @apply ml-2 text-xs transition-colors;
+    @apply text-xs transition-colors;
     color: var(--color-text-muted);
 
     /* 親(.timeline-item)がホバーされた時 */
@@ -160,8 +166,10 @@
     /* 画面より大きく描画して動かす */
     background-size: 400% 400%;
 
-    /* 15秒かけてゆっくり動く */
-    animation: gradient-move 15s ease infinite;
+    /* 15秒かけてゆっくり動く。スマホでは描画負荷が高いので PC のみ */
+    @media (width >= 48rem) and (prefers-reduced-motion: no-preference) {
+      animation: gradient-move 15s ease infinite;
+    }
   }
 
   @keyframes gradient-move {

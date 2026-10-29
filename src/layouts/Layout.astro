@@ -24,19 +24,21 @@ const canonicalUrl = Astro.site
 
 const ogImageUrl = Astro.site ? new URL(ogImage, Astro.site).href : ogImage;
 
+// メイン部分だけ入れ替えのアニメーションをする。
+// 旧ページが消えきる前に新ページを出し始めて、何も表示されない時間を作らない
 const verticalSlideTransition = {
   old: {
     name: "slideDownFadeOut",
-    duration: "0.2s",
+    duration: "0.15s",
     easing: "ease-in",
-    fillMode: "forwards",
+    fillMode: "both",
   },
   new: {
     name: "slideUpFadeIn",
-    duration: "0.2s",
-    delay: "0.4s",
-    easing: "ease-out",
-    fillMode: "backwards",
+    duration: "0.25s",
+    delay: "0.1s",
+    easing: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+    fillMode: "both",
   },
 } as const;
 
@@ -50,7 +52,7 @@ const customTransition = {
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
 
     {/* 基本 */}
@@ -88,13 +90,26 @@ const customTransition = {
           opacity: 0;
         }
       }
+
+      /* ヘッダーとサイドバーは消さずに、新しい位置へ上下にスライドさせる */
+      ::view-transition-group(header),
+      ::view-transition-group(sidebar) {
+        animation-duration: 0.35s;
+        animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-group(*),
+        ::view-transition-old(*),
+        ::view-transition-new(*) {
+          animation: none !important;
+        }
+      }
     </style>
   </head>
   <body class="animate-background font-sans md:mx-auto md:max-w-7xl">
     <Header />
-    <div
-      class="mx-auto mt-4 flex flex-col items-start gap-4 md:flex-row md:gap-6"
-    >
+    <div class="mx-auto mt-4 flex flex-col items-start gap-4 md:flex-row md:gap-6">
       <main
         transition:animate={customTransition}
         class="widget-card flex w-full flex-col gap-6 md:order-2 md:w-4/5"
@@ -102,7 +117,11 @@ const customTransition = {
         <slot />
       </main>
 
-      <aside class="order-1 flex w-full shrink-0 flex-col gap-6 md:w-1/5">
+      <aside
+        transition:name="sidebar"
+        transition:animate="initial"
+        class="order-1 flex w-full shrink-0 flex-col gap-6 md:w-1/5"
+      >
         <Sidebar />
       </aside>
     </div>

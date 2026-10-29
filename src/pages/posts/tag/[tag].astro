@@ -1,0 +1,29 @@
+---
+import Layout from "@layouts/Layout.astro";
+import PostTimeline from "@components/PostTimeline/PostTimeline.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const tags = Array.from(
+    new Set((await getCollection("blog")).flatMap((post) => post.data.tags)),
+  );
+
+  return tags.map((tag) => ({
+    params: { tag },
+  }));
+}
+
+const { tag } = Astro.params;
+
+const allBlogPosts = await getCollection("blog");
+const filteredPosts = allBlogPosts
+  .filter((post) => post.data.tags.includes(tag))
+  .filter((post) => (import.meta.env.PROD ? post.data.draft !== true : true))
+  .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
+---
+
+<Layout title={`#${tag} | すやすやログ`}>
+  <h2>#{tag}</h2>
+
+  <PostTimeline posts={filteredPosts} />
+</Layout>

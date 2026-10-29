@@ -2,9 +2,9 @@
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
 
-import react from "@astrojs/react";
 import icon from "astro-icon";
 
+import { unified } from "@astrojs/markdown-remark";
 import remarkLinkCard from "remark-link-card-plus";
 import expressiveCode from "astro-expressive-code";
 
@@ -16,7 +16,6 @@ export default defineConfig({
   },
 
   integrations: [
-    react(),
     icon(),
     expressiveCode({ themes: ["github-light", "github-dark"] }),
   ],
@@ -27,15 +26,17 @@ export default defineConfig({
         dark: "github-light",
       },
     },
-    remarkPlugins: [
-      [
-        remarkLinkCard,
-        {
-          cache: true,
-          shortenUrl: true,
-          thumbnailPosition: "right",
-        },
+    processor: unified({
+      remarkPlugins: [
+        [
+          remarkLinkCard,
+          {
+            cache: true,
+            shortenUrl: true,
+            thumbnailPosition: "right",
+          },
+        ],
       ],
-    ],
+    }),
   },
 });

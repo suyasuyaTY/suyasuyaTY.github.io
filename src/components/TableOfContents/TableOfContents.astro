@@ -1,0 +1,26 @@
+---
+import type { MarkdownHeading } from "astro";
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const headings = Astro.props.headings.filter(
+  (heading) => heading.depth === 2 || heading.depth === 3,
+);
+---
+
+{headings.length > 0 && (
+  <ul class="flex flex-col gap-1 text-sm">
+    {headings.map((heading) => (
+      <li class:list={[heading.depth === 3 && "pl-4"]}>
+        <a
+          href={`#${heading.slug}`}
+          class="block rounded px-2 py-1 text-(--color-text-muted) transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
+        >
+          {heading.text}
+        </a>
+      </li>
+    ))}
+  </ul>
+)}

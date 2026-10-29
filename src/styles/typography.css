@@ -60,6 +60,11 @@
    Custom Elements Style
    ========================================= */
 @layer utilities {
+  /* 目次から飛んだときにヘッダーに隠れないようにする */
+  .prose :where(h2, h3) {
+    scroll-margin-top: 6rem;
+  }
+
   .prose ol li ol {
     list-style-type: lower-alpha;
   }
