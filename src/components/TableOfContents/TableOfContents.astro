@@ -10,13 +10,19 @@ const headings = Astro.props.headings.filter(
 );
 ---
 
+{/* 左の縦線のうち、今読んでいる見出しの部分だけ色を付ける */}
 {headings.length > 0 && (
-  <ul class="flex flex-col gap-1 text-sm">
+  <ul class="flex flex-col border-l-2 border-(--color-border) text-sm">
     {headings.map((heading) => (
-      <li class:list={[heading.depth === 3 && "pl-4"]}>
+      <li>
         <a
           href={`#${heading.slug}`}
-          class="block rounded px-2 py-1 text-(--color-text-muted) transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
+          data-toc-link={heading.slug}
+          class:list={[
+            "-ml-0.5 block border-l-2 border-transparent py-1.5 pr-2 text-(--color-text-muted) transition-colors hover:text-(--color-primary)",
+            "aria-[current=location]:border-(--color-primary) aria-[current=location]:font-bold aria-[current=location]:text-(--color-text-heading)",
+            heading.depth === 3 ? "pl-7" : "pl-4",
+          ]}
         >
           {heading.text}
         </a>
@@ -24,3 +30,75 @@ const headings = Astro.props.headings.filter(
     ))}
   </ul>
 )}
+
+<script>
+  // 見出しの上端がこの位置 (px) より上にあれば「読んでいる」とみなす
+  const activeOffset = 120;
+
+  let controller: AbortController | undefined;
+
+  const setup = () => {
+    controller?.abort();
+
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"),
+    );
+    if (links.length === 0) return;
+
+    const slugs = Array.from(new Set(links.map((l) => l.dataset.tocLink!)));
+    const headings = slugs
+      .map((slug) => document.getElementById(slug))
+      .filter((el): el is HTMLElement => el !== null);
+    if (headings.length === 0) return;
+
+    controller = new AbortController();
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+
+      // 一番下までスクロールしたら最後の見出しにする
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+
+      // 最初の見出しより上にいるときは最初の見出しにする
+      let current = headings[0];
+      if (atBottom) {
+        current = headings[headings.length - 1];
+      } else {
+        for (const heading of headings) {
+          if (heading.getBoundingClientRect().top > activeOffset) break;
+          current = heading;
+        }
+      }
+
+      links.forEach((link) => {
+        if (current && link.dataset.tocLink === current.id) {
+          link.setAttribute("aria-current", "location");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    };
+
+    window.addEventListener("scroll", onScroll, {
+      passive: true,
+      signal: controller.signal,
+    });
+    window.addEventListener("resize", onScroll, {
+      passive: true,
+      signal: controller.signal,
+    });
+    update();
+  };
+
+  document.addEventListener("astro:page-load", setup);
+  document.addEventListener("astro:before-swap", () => controller?.abort());
+</script>

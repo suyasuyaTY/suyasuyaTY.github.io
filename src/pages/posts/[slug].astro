@@ -4,6 +4,7 @@ import { getCollection, getEntry, render } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "@layouts/Layout.astro";
 import TableOfContents from "@components/TableOfContents/TableOfContents.astro";
+import TocDrawer from "@components/TableOfContents/TocDrawer.astro";
 import ProfileCard from "@components/Profile/ProfileCard.astro";
 
 export async function getStaticPaths() {
@@ -108,18 +109,6 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
           </div>
         </header>
 
-        {/* 目次 (スマホ・タブレットは折りたたみ、広い画面は右側に固定) */}
-        {hasToc && (
-          <details class="toc-details mb-8 rounded-xl border border-(--color-border) lg:hidden">
-            <summary class="cursor-pointer px-4 py-3 font-bold text-(--color-text-heading)">
-              目次
-            </summary>
-            <nav aria-label="目次" class="px-2 pb-3">
-              <TableOfContents headings={headings} />
-            </nav>
-          </details>
-        )}
-
         <div class="prose prose-blue dark:prose-invert max-w-none">
           <Content />
         </div>
@@ -136,10 +125,11 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
     {hasToc && (
       <nav aria-label="目次" class="hidden lg:block">
         <div class="sticky top-28 pt-2">
-          <p class="mb-2 px-2 font-bold text-(--color-text-heading)">目次</p>
           <TableOfContents headings={headings} />
         </div>
       </nav>
     )}
   </div>
+
+  {hasToc && <TocDrawer headings={headings} />}
 </Layout>
