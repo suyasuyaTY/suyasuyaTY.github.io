@@ -4,6 +4,7 @@ import { getCollection, getEntry, render } from "astro:content";
 import { Image } from "astro:assets";
 import Layout from "@layouts/Layout.astro";
 import TableOfContents from "@components/TableOfContents/TableOfContents.astro";
+import ProfileCard from "@components/Profile/ProfileCard.astro";
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection("blog");
@@ -34,8 +35,8 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
   ogImage={entry.data.thumbnail.src}
   ogType="article"
 >
-  <article class="mx-auto w-full max-w-[42rem] xl:grid xl:max-w-none xl:grid-cols-[minmax(0,42rem)_13rem] xl:justify-between xl:gap-x-8">
-    <header class="xl:col-span-2">
+  <article class="mx-auto w-full max-w-[42rem] lg:grid lg:max-w-[64rem] lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-x-10">
+    <header class="lg:col-span-2">
       <h1 class="text-2xl font-bold text-(--color-text-heading) md:text-3xl">
         {remarkPluginFrontmatter["title"]}
       </h1>
@@ -105,7 +106,7 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
 
     {/* 目次 (スマホ・タブレットは折りたたみ、広い画面は右側に固定) */}
     {hasToc && (
-      <details class="toc-details mb-8 rounded-xl border border-(--color-border) xl:hidden">
+      <details class="toc-details mb-8 rounded-xl border border-(--color-border) lg:hidden">
         <summary class="cursor-pointer px-4 py-3 font-bold text-(--color-text-heading)">
           目次
         </summary>
@@ -115,12 +116,24 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
       </details>
     )}
 
-    <div class="prose prose-blue dark:prose-invert max-w-none min-w-0">
-      <Content />
+    <div class="min-w-0">
+      <div class="prose prose-blue dark:prose-invert max-w-none">
+        <Content />
+      </div>
+
+      <section
+        aria-label="この記事を書いた人"
+        class="mt-16 rounded-xl border border-(--color-border) p-6"
+      >
+        <p class="mb-4 text-sm font-bold text-(--color-text-muted)">
+          この記事を書いた人
+        </p>
+        <ProfileCard />
+      </section>
     </div>
 
     {hasToc && (
-      <nav aria-label="目次" class="hidden xl:block">
+      <nav aria-label="目次" class="hidden lg:block">
         <div class="sticky top-28">
           <p class="mb-2 px-2 font-bold text-(--color-text-heading)">目次</p>
           <TableOfContents headings={headings} />

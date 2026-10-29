@@ -1,0 +1,14 @@
+---
+import PostTaxonomy from "./PostTaxonomy.astro";
+---
+
+{/* 記事一覧 + カテゴリ・タグ一覧の2カラム (スマホは縦に並べる) */}
+<div class="flex flex-col gap-10 lg:grid lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-10">
+  <div class="min-w-0">
+    <slot />
+  </div>
+
+  <aside aria-label="カテゴリ・タグ一覧" class="lg:sticky lg:top-28 lg:self-start">
+    <PostTaxonomy />
+  </aside>
+</div>

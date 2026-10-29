@@ -1,0 +1,58 @@
+---
+import { getCollection } from "astro:content";
+
+const allBlogPosts = await getCollection("blog");
+const posts = allBlogPosts.filter((post) =>
+  import.meta.env.PROD ? post.data.draft !== true : true,
+);
+
+const countBy = (values: string[]) => {
+  const counts = new Map<string, number>();
+  values.forEach((value) => counts.set(value, (counts.get(value) || 0) + 1));
+  return Array.from(counts.entries()).sort((a, b) => b[1] - a[1]);
+};
+
+const sortedCategories = countBy(posts.map((post) => post.data.category));
+const sortedTags = countBy(posts.flatMap((post) => post.data.tags));
+---
+
+<div class="flex flex-col gap-8">
+  <section>
+    <div class="text-md mb-4 font-semibold text-(--color-text-muted)">
+      カテゴリー
+    </div>
+    <ul class="flex flex-col gap-3">
+      {
+        sortedCategories.map(([category, count]) => (
+          <li>
+            <a href={`/posts/category/${category}`} class="link-category">
+              <span>{category}</span>
+              <span>{count}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section>
+    <div class="text-md mb-4 font-semibold text-(--color-text-muted)">
+      タグ
+    </div>
+    <ul class="flex flex-wrap gap-2">
+      {
+        sortedTags.map(([tag, count]) => (
+          <li>
+            <a
+              href={`/posts/tag/${tag}`}
+              class="flex items-center gap-1 rounded-md bg-(--color-primary-subtle) px-2 py-1 text-sm text-(--color-text-body) transition-colors hover:text-(--color-primary)"
+            >
+              #{tag}
+              <span class="text-xs text-(--color-text-muted)">{count}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</div>

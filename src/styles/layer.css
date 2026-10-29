@@ -59,7 +59,7 @@
     }
   }
 
-  /* --- Social Icon Button (Sidebar) --- */
+  /* --- Social Icon Button (Profile) --- */
   .btn-social {
     @apply rounded-sm p-1;
     background-color: var(--color-primary-subtle);
@@ -69,7 +69,7 @@
     }
   }
 
-  /* --- Category Link (Sidebar) --- */
+  /* --- Category Link (Posts) --- */
   .link-category {
     @apply flex justify-between transition-colors duration-200;
     color: var(--color-text-body);

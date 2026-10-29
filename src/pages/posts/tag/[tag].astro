@@ -1,6 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
 import PostTimeline from "@components/PostTimeline/PostTimeline.astro";
+import PostsWithTaxonomy from "@components/PostTaxonomy/PostsWithTaxonomy.astro";
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
@@ -23,7 +24,9 @@ const filteredPosts = allBlogPosts
 ---
 
 <Layout title={`#${tag} | すやすやログ`}>
-  <h2>#{tag}</h2>
+  <PostsWithTaxonomy>
+    <h2>#{tag}</h2>
 
-  <PostTimeline posts={filteredPosts} />
+    <PostTimeline posts={filteredPosts} />
+  </PostsWithTaxonomy>
 </Layout>
