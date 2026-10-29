@@ -1,6 +1,5 @@
 ---
 import type { MarkdownHeading } from "astro";
-import { Icon } from "astro-icon/components";
 import TableOfContents from "./TableOfContents.astro";
 
 interface Props {
@@ -8,72 +7,106 @@ interface Props {
 }
 
 const { headings } = Astro.props;
+
+const dotClass =
+  "absolute left-0 h-0.5 w-0.5 rounded-full bg-current transition-[opacity,scale] duration-200 group-aria-expanded:scale-0 group-aria-expanded:opacity-0";
+const barClass =
+  "absolute right-0 h-0.5 w-3.5 rounded-full bg-current transition-all duration-300 ease-in-out group-aria-expanded:w-5";
 ---
 
-{/* スマホ・タブレット用: 右下のボタンを押すと目次が開く */}
+{/* スマホ・タブレット用: 右下のボタンで目次を開閉する (開いたまま本文を読める) */}
 <div class="lg:hidden">
-  <button
-    type="button"
-    data-toc-open
-    aria-label="目次を開く"
-    aria-haspopup="dialog"
-    aria-controls="tocDrawer"
-    class="fixed right-4 bottom-4 z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-(--color-primary) text-white shadow-lg transition-colors hover:bg-(--color-primary-hover)"
-  >
-    <Icon name="heroicons:list-bullet-20-solid" class="h-6 w-6" />
-  </button>
-
-  <dialog
+  <nav
     id="tocDrawer"
     aria-label="目次"
-    class="fixed inset-auto right-4 bottom-20 m-0 max-h-[70vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto rounded-2xl bg-(--color-bg-surface) p-4 text-(--color-text-body) shadow-2xl backdrop:bg-black/30"
+    data-open="false"
+    class="invisible fixed right-4 bottom-20 z-20 max-h-[60vh] w-[min(20rem,calc(100vw-2rem))] origin-bottom-right translate-y-2 scale-95 overflow-y-auto rounded-2xl border border-(--color-border) bg-(--color-bg-surface) p-4 text-(--color-text-body) opacity-0 shadow-2xl transition-[opacity,translate,scale,visibility] duration-200 ease-out data-[open=true]:visible data-[open=true]:translate-y-0 data-[open=true]:scale-100 data-[open=true]:opacity-100"
   >
-    <div class="mb-3 flex items-center justify-between">
-      <p class="font-bold text-(--color-text-heading)">目次</p>
-      <button
-        type="button"
-        data-toc-close
-        aria-label="目次を閉じる"
-        class="flex h-8 w-8 cursor-pointer items-center justify-center rounded text-(--color-text-muted) hover:bg-(--color-primary-subtle)"
-      >
-        <Icon name="heroicons:x-mark-20-solid" class="h-5 w-5" />
-      </button>
-    </div>
-    <nav aria-label="目次">
-      <TableOfContents headings={headings} />
-    </nav>
-  </dialog>
+    <TableOfContents headings={headings} />
+  </nav>
+
+  {/* アイコン: 閉じているときはリスト、開いているときは点を消して線を × に変形する */}
+  <button
+    type="button"
+    id="tocToggle"
+    aria-label="目次を開く"
+    aria-controls="tocDrawer"
+    aria-expanded="false"
+    class="group fixed right-4 bottom-4 z-20 flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-(--color-primary) text-white shadow-lg transition-colors hover:bg-(--color-primary-hover)"
+  >
+    <span class="relative block h-3.5 w-5" aria-hidden="true">
+      <span class:list={[dotClass, "top-0"]}></span>
+      <span class:list={[dotClass, "top-1/2 -translate-y-1/2"]}></span>
+      <span class:list={[dotClass, "bottom-0"]}></span>
+      <span
+        class:list={[
+          barClass,
+          "top-0 group-aria-expanded:top-1/2 group-aria-expanded:-translate-y-1/2 group-aria-expanded:rotate-45",
+        ]}
+      ></span>
+      <span
+        class:list={[
+          barClass,
+          "top-1/2 -translate-y-1/2 group-aria-expanded:scale-x-0 group-aria-expanded:opacity-0",
+        ]}
+      ></span>
+      <span
+        class:list={[
+          barClass,
+          "bottom-0 group-aria-expanded:bottom-1/2 group-aria-expanded:translate-y-1/2 group-aria-expanded:-rotate-45",
+        ]}
+      ></span>
+    </span>
+  </button>
 </div>
 
 <script>
+  let controller: AbortController | undefined;
+
   const setup = () => {
-    const dialog = document.getElementById(
-      "tocDrawer",
-    ) as HTMLDialogElement | null;
-    const openBtn =
-      document.querySelector<HTMLButtonElement>("[data-toc-open]");
-    if (!dialog || !openBtn) return;
+    controller?.abort();
 
-    openBtn.addEventListener("click", () => dialog.showModal());
+    const drawer = document.getElementById("tocDrawer");
+    const toggleBtn = document.getElementById("tocToggle");
+    if (!drawer || !toggleBtn) return;
 
-    dialog
-      .querySelector("[data-toc-close]")
-      ?.addEventListener("click", () => dialog.close());
+    controller = new AbortController();
+    const { signal } = controller;
 
-    // 背景 (ダイアログの外側) のタップで閉じる
-    dialog.addEventListener("click", (event) => {
-      if (event.target === dialog) dialog.close();
-    });
+    const isOpen = () => toggleBtn.getAttribute("aria-expanded") === "true";
 
-    // 項目を押したら閉じてから見出しへ移動する
-    dialog.querySelectorAll("a[data-toc-link]").forEach((link) => {
-      link.addEventListener("click", () => dialog.close());
-    });
+    const setOpen = (open: boolean) => {
+      drawer.dataset.open = String(open);
+      toggleBtn.setAttribute("aria-expanded", String(open));
+      toggleBtn.setAttribute(
+        "aria-label",
+        open ? "目次を閉じる" : "目次を開く",
+      );
+    };
 
-    dialog.addEventListener("close", () =>
-      openBtn.focus({ preventScroll: true }),
+    toggleBtn.addEventListener("click", () => setOpen(!isOpen()), { signal });
+
+    // ボタンを押すまでは開いたまま本文を読めるようにし、Esc でも閉じられるようにする
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key !== "Escape" || !isOpen()) return;
+        setOpen(false);
+        toggleBtn.focus();
+      },
+      { signal },
+    );
+
+    // 広い画面では右側の目次を使うので閉じておく
+    window.addEventListener(
+      "resize",
+      () => {
+        if (window.matchMedia("(min-width: 1024px)").matches) setOpen(false);
+      },
+      { signal },
     );
   };
 
   document.addEventListener("astro:page-load", setup);
+  document.addEventListener("astro:before-swap", () => controller?.abort());
 </script>

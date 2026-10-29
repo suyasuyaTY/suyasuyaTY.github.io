@@ -125,7 +125,6 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
     {hasToc && (
       <nav aria-label="目次" class="hidden lg:block">
         <div class="sticky top-28 pt-2">
-          <p class="mb-3 font-bold text-(--color-text-heading)">目次</p>
           <TableOfContents headings={headings} />
         </div>
       </nav>
