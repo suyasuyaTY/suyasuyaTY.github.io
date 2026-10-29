@@ -1,0 +1,132 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+
+const xUrl = `https://x.com/intent/post?${new URLSearchParams({ text: title, url })}`;
+const hatenaUrl = `https://b.hatena.ne.jp/add?${new URLSearchParams({ mode: "confirm", url, title })}`;
+
+const buttonClass =
+  "flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-(--color-primary-subtle) text-(--color-primary) transition-colors hover:bg-(--color-primary-subtle-hover)";
+---
+
+<div
+  data-share
+  data-title={title}
+  data-url={url}
+  class="flex flex-wrap items-center gap-3"
+>
+  <a
+    href={xUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Xでポストする"
+    title="Xでポストする"
+    class={buttonClass}
+  >
+    <Icon name="simple-icons:x" class="h-5 w-5" />
+  </a>
+
+  <a
+    href={hatenaUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="はてなブックマークに追加する"
+    title="はてなブックマークに追加する"
+    class={buttonClass}
+  >
+    <Icon name="simple-icons:hatenabookmark" class="h-5 w-5" />
+  </a>
+
+  <button
+    type="button"
+    data-share-copy
+    aria-label="URLをコピーする"
+    title="URLをコピーする"
+    class={buttonClass}
+  >
+    <Icon name="heroicons:link-20-solid" class="h-5 w-5" data-copy-icon />
+    <Icon
+      name="heroicons:check-20-solid"
+      class="hidden h-5 w-5"
+      data-copied-icon
+    />
+  </button>
+
+  {/* Web Share API が使える端末だけ表示する */}
+  <button
+    type="button"
+    data-share-native
+    aria-label="その他の方法で共有する"
+    title="その他の方法で共有する"
+    class:list={[buttonClass, "hidden"]}
+  >
+    <Icon name="heroicons:arrow-up-on-square-20-solid" class="h-5 w-5" />
+  </button>
+
+  <span
+    data-share-status
+    role="status"
+    class="text-sm text-(--color-text-muted)"
+  ></span>
+</div>
+
+<script>
+  const copiedDurationMs = 2000;
+
+  const setup = () => {
+    document.querySelectorAll<HTMLElement>("[data-share]").forEach((root) => {
+      const title = root.dataset.title ?? document.title;
+      const url = root.dataset.url ?? location.href;
+      const status = root.querySelector<HTMLElement>("[data-share-status]");
+
+      // --- URLをコピー ---
+      const copyBtn =
+        root.querySelector<HTMLButtonElement>("[data-share-copy]");
+      const copyIcon = copyBtn?.querySelector("[data-copy-icon]");
+      const copiedIcon = copyBtn?.querySelector("[data-copied-icon]");
+      let timer: number | undefined;
+
+      copyBtn?.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(url);
+        } catch {
+          if (status) status.textContent = "コピーできませんでした";
+          return;
+        }
+        copyIcon?.classList.add("hidden");
+        copiedIcon?.classList.remove("hidden");
+        if (status) status.textContent = "URLをコピーしました";
+
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          copyIcon?.classList.remove("hidden");
+          copiedIcon?.classList.add("hidden");
+          if (status) status.textContent = "";
+        }, copiedDurationMs);
+      });
+
+      // --- 端末の共有シート ---
+      const nativeBtn = root.querySelector<HTMLButtonElement>(
+        "[data-share-native]",
+      );
+      if (!nativeBtn || typeof navigator.share !== "function") return;
+
+      nativeBtn.classList.remove("hidden");
+      nativeBtn.addEventListener("click", async () => {
+        try {
+          await navigator.share({ title, url });
+        } catch {
+          // ユーザーが共有シートを閉じた場合も例外になるので何もしない
+        }
+      });
+    });
+  };
+
+  document.addEventListener("astro:page-load", setup);
+</script>
