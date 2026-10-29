@@ -22,37 +22,31 @@ const sortedTags = countBy(posts.flatMap((post) => post.data.tags));
       カテゴリー
     </div>
     <ul class="flex flex-col gap-3">
-      {
-        sortedCategories.map(([category, count]) => (
-          <li>
-            <a href={`/posts/category/${category}`} class="link-category">
-              <span>{category}</span>
-              <span>{count}</span>
-            </a>
-          </li>
-        ))
-      }
+      {sortedCategories.map(([category, count]) => (
+        <li>
+          <a href={`/posts/category/${category}`} class="link-category">
+            <span>{category}</span>
+            <span>{count}</span>
+          </a>
+        </li>
+      ))}
     </ul>
   </section>
 
   <section>
-    <div class="text-md mb-4 font-semibold text-(--color-text-muted)">
-      タグ
-    </div>
+    <div class="text-md mb-4 font-semibold text-(--color-text-muted)">タグ</div>
     <ul class="flex flex-wrap gap-2">
-      {
-        sortedTags.map(([tag, count]) => (
-          <li>
-            <a
-              href={`/posts/tag/${tag}`}
-              class="flex items-center gap-1 rounded-md bg-(--color-primary-subtle) px-2 py-1 text-sm text-(--color-text-body) transition-colors hover:text-(--color-primary)"
-            >
-              #{tag}
-              <span class="text-xs text-(--color-text-muted)">{count}</span>
-            </a>
-          </li>
-        ))
-      }
+      {sortedTags.map(([tag, count]) => (
+        <li>
+          <a
+            href={`/posts/tag/${tag}`}
+            class="flex items-center gap-1 rounded-md bg-(--color-primary-subtle) px-2 py-1 text-sm text-(--color-text-body) transition-colors hover:text-(--color-primary)"
+          >
+            #{tag}
+            <span class="text-xs text-(--color-text-muted)">{count}</span>
+          </a>
+        </li>
+      ))}
     </ul>
   </section>
 </div>

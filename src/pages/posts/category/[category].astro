@@ -23,7 +23,7 @@ const filteredPosts = allBlogPosts
   .sort((a, b) => b.data.createdAt.getTime() - a.data.createdAt.getTime());
 ---
 
-<Layout title={`${category} | すやすやログ`}>
+<Layout title={`${category} | すやすやログ`} bare>
   <PostsWithTaxonomy>
     <h2>{category}</h2>
 

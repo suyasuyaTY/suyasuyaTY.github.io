@@ -33,28 +33,27 @@ const links = [
     </div>
 
     <p class="text-center text-sm text-(--color-text-muted) sm:text-left">
-      Astro最高! <br />オマエもAstro最高と叫びなさい!!
+      Astro最高! <br />
+      オマエもAstro最高と叫びなさい!!
     </p>
 
     <div class="mt-2 flex gap-2">
-      {
-        links.map(({ href, icon, darkIcon }) => (
-          <a href={href} title={icon} target="_blank" rel="noopener noreferrer">
+      {links.map(({ href, icon, darkIcon }) => (
+        <a href={href} title={icon} target="_blank" rel="noopener noreferrer">
+          <Icon
+            name={icon}
+            class:list={["btn-social", darkIcon ? "dark:hidden" : ""]}
+            size={32}
+          />
+          {darkIcon && (
             <Icon
-              name={icon}
-              class:list={["btn-social", darkIcon ? "dark:hidden" : ""]}
+              name={darkIcon}
+              class="btn-social hidden dark:block"
               size={32}
             />
-            {darkIcon && (
-              <Icon
-                name={darkIcon}
-                class="btn-social hidden dark:block"
-                size={32}
-              />
-            )}
-          </a>
-        ))
-      }
+          )}
+        </a>
+      ))}
     </div>
   </div>
 </div>

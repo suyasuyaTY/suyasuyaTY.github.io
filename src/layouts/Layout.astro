@@ -8,6 +8,8 @@ export interface Props {
   description?: string;
   ogImage?: string;
   ogType?: "website" | "article";
+  // true のときは main をカードにせず、ページ側でコンテナを組み立てる
+  bare?: boolean;
 }
 
 const {
@@ -15,6 +17,7 @@ const {
   description = "寿司と競プロが好きです",
   ogImage = "/ogp.png",
   ogType = "website",
+  bare = false,
 } = Astro.props;
 
 const canonicalUrl = Astro.site
@@ -109,7 +112,7 @@ const customTransition = {
     <Header />
     <main
       transition:animate={customTransition}
-      class="widget-card mt-4 flex w-full flex-col gap-6"
+      class:list={["mt-4 flex w-full flex-col gap-6", { "widget-card": !bare }]}
     >
       <slot />
     </main>

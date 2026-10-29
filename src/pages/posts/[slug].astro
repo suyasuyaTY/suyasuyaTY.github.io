@@ -34,97 +34,98 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
   description={remarkPluginFrontmatter["description"]}
   ogImage={entry.data.thumbnail.src}
   ogType="article"
+  bare
 >
-  <article class="mx-auto w-full max-w-[42rem] lg:grid lg:max-w-[64rem] lg:grid-cols-[minmax(0,1fr)_13rem] lg:gap-x-10">
-    <header class="lg:col-span-2">
-      <h1 class="text-2xl font-bold text-(--color-text-heading) md:text-3xl">
-        {remarkPluginFrontmatter["title"]}
-      </h1>
+  {/* 本文のカードと目次を隣同士に置く (目次はカードの外で本文の横に固定) */}
+  <div class="mx-auto w-full lg:grid lg:max-w-[72rem] lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-x-8">
+    <div class="flex min-w-0 flex-col gap-4">
+      <article class="widget-card md:px-10 md:py-10">
+        <header>
+          <h1 class="text-2xl font-bold text-(--color-text-heading) md:text-3xl">
+            {remarkPluginFrontmatter["title"]}
+          </h1>
 
-      <div class="my-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-bold text-(--color-text-muted) md:text-base">
-        {/* 日付 */}
-        <div class="flex items-center gap-2">
-          <Icon
-            name="heroicons:calendar-days-20-solid"
-            size={28}
-            class="icon-badge"
-          />
-          <time datetime={createdAt}>{createdAt}</time>
-          {updatedAt !== createdAt && (
-            <span class="flex items-center gap-1">
-              <Icon name="heroicons:arrow-path-20-solid" size={16} />
-              <time datetime={updatedAt}>{updatedAt}</time>
-            </span>
-          )}
-        </div>
+          <div class="my-4 flex flex-wrap gap-x-4 gap-y-2 text-sm font-bold text-(--color-text-muted) md:text-base">
+            {/* 日付 */}
+            <div class="flex items-center gap-2">
+              <Icon
+                name="heroicons:calendar-days-20-solid"
+                size={28}
+                class="icon-badge"
+              />
+              <time datetime={createdAt}>{createdAt}</time>
+              {updatedAt !== createdAt && (
+                <span class="flex items-center gap-1">
+                  <Icon name="heroicons:arrow-path-20-solid" size={16} />
+                  <time datetime={updatedAt}>{updatedAt}</time>
+                </span>
+              )}
+            </div>
 
-        {/* カテゴリ */}
-        <div class="flex items-center gap-2">
-          <Icon name="heroicons:tag" size={28} class="icon-badge" />
-          <a
-            href={`/posts/category/${entry.data.category}`}
-            class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
-          >
-            {entry.data.category}
-          </a>
-        </div>
+            {/* カテゴリ */}
+            <div class="flex items-center gap-2">
+              <Icon name="heroicons:tag" size={28} class="icon-badge" />
+              <a
+                href={`/posts/category/${entry.data.category}`}
+                class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
+              >
+                {entry.data.category}
+              </a>
+            </div>
 
-        {/* タグ */}
-        <div class="flex items-center gap-2">
-          <Icon name="heroicons:hashtag" size={28} class="icon-badge" />
-          <div class="flex flex-wrap gap-1">
-            {entry.data.tags.map((tag, index) => (
-              <>
-                <a
-                  href={`/posts/tag/${tag}`}
-                  class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
-                >
-                  {tag}
-                </a>
-                {index < entry.data.tags.length - 1 && (
-                  <span class="py-1">/</span>
-                )}
-              </>
-            ))}
+            {/* タグ */}
+            <div class="flex items-center gap-2">
+              <Icon name="heroicons:hashtag" size={28} class="icon-badge" />
+              <div class="flex flex-wrap gap-1">
+                {entry.data.tags.map((tag, index) => (
+                  <>
+                    <a
+                      href={`/posts/tag/${tag}`}
+                      class="rounded p-1 transition-colors hover:bg-(--color-primary-subtle) hover:text-(--color-primary)"
+                    >
+                      {tag}
+                    </a>
+                    {index < entry.data.tags.length - 1 && (
+                      <span class="py-1">/</span>
+                    )}
+                  </>
+                ))}
+              </div>
+            </div>
           </div>
+
+          <div
+            class="mb-8 w-full overflow-hidden rounded-xl shadow-sm"
+            style="background-color: var(--color-bg-surface);"
+          >
+            <Image
+              src={entry.data.thumbnail}
+              alt={entry.data.title}
+              width={1200}
+              height={630}
+              class="aspect-[1.91/1] h-full w-full object-cover"
+            />
+          </div>
+        </header>
+
+        {/* 目次 (スマホ・タブレットは折りたたみ、広い画面は右側に固定) */}
+        {hasToc && (
+          <details class="toc-details mb-8 rounded-xl border border-(--color-border) lg:hidden">
+            <summary class="cursor-pointer px-4 py-3 font-bold text-(--color-text-heading)">
+              目次
+            </summary>
+            <nav aria-label="目次" class="px-2 pb-3">
+              <TableOfContents headings={headings} />
+            </nav>
+          </details>
+        )}
+
+        <div class="prose prose-blue dark:prose-invert max-w-none">
+          <Content />
         </div>
-      </div>
+      </article>
 
-      <div
-        class="mb-8 w-full overflow-hidden rounded-xl shadow-sm"
-        style="background-color: var(--color-bg-surface);"
-      >
-        <Image
-          src={entry.data.thumbnail}
-          alt={entry.data.title}
-          width={1200}
-          height={630}
-          class="aspect-[1.91/1] h-full w-full object-cover"
-        />
-      </div>
-    </header>
-
-    {/* 目次 (スマホ・タブレットは折りたたみ、広い画面は右側に固定) */}
-    {hasToc && (
-      <details class="toc-details mb-8 rounded-xl border border-(--color-border) lg:hidden">
-        <summary class="cursor-pointer px-4 py-3 font-bold text-(--color-text-heading)">
-          目次
-        </summary>
-        <nav aria-label="目次" class="px-2 pb-3">
-          <TableOfContents headings={headings} />
-        </nav>
-      </details>
-    )}
-
-    <div class="min-w-0">
-      <div class="prose prose-blue dark:prose-invert max-w-none">
-        <Content />
-      </div>
-
-      <section
-        aria-label="この記事を書いた人"
-        class="mt-16 rounded-xl border border-(--color-border) p-6"
-      >
+      <section aria-label="この記事を書いた人" class="widget-card md:px-10">
         <p class="mb-4 text-sm font-bold text-(--color-text-muted)">
           この記事を書いた人
         </p>
@@ -134,11 +135,11 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
 
     {hasToc && (
       <nav aria-label="目次" class="hidden lg:block">
-        <div class="sticky top-28">
+        <div class="sticky top-28 pt-2">
           <p class="mb-2 px-2 font-bold text-(--color-text-heading)">目次</p>
           <TableOfContents headings={headings} />
         </div>
       </nav>
     )}
-  </article>
+  </div>
 </Layout>
