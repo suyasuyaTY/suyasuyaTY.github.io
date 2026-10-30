@@ -1,18 +1,20 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import PostDate from "@components/common/PostDate.astro";
 
 // 記事一覧用の詳細カード: OGP 画像・タイトル・タグ・概要・日付を表示する
+// - 広い画面: 左に文字情報、右に OGP 画像 (画像の左端をぼかして境目をなくす)
+// - 狭い画面: OGP 画像の上に文字情報を重ね、ホバーすると文字情報が消えて画像だけになる
 interface Props {
   post: CollectionEntry<"blog">;
 }
 
 const { post } = Astro.props;
 const { title, description, tags, createdAt } = post.data;
-const date = createdAt.toISOString().split("T")[0];
 const url = `/posts/${post.id}`;
 ---
 
-<article class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-(--color-border) bg-(--color-bg-surface) transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-lg">
+<article class="group relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-bg-surface) transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-lg sm:flex sm:items-center">
   <img
     src={`/og/${post.id}.png`}
     alt=""
@@ -20,19 +22,14 @@ const url = `/posts/${post.id}`;
     height={630}
     loading="lazy"
     decoding="async"
-    class="aspect-[1200/630] w-full border-b border-(--color-border) object-cover"
+    class="aspect-[1200/630] w-full object-cover sm:order-2 sm:w-[45%] sm:shrink-0 sm:mask-l-from-60% sm:mask-l-to-100%"
   />
 
-  <div class="flex flex-1 flex-col gap-2 p-4">
-    <time
-      datetime={date}
-      class="text-xs text-(--color-text-muted) tabular-nums"
-    >
-      {date}
-    </time>
+  <div class="flex flex-col gap-2 p-4 transition-opacity duration-300 max-sm:absolute max-sm:inset-0 max-sm:justify-center max-sm:bg-(--color-bg-surface)/75 max-sm:backdrop-blur-[2px] max-sm:group-focus-within:opacity-0 max-sm:group-hover:opacity-0 sm:order-1 sm:min-w-0 sm:flex-1 sm:p-6">
+    <PostDate date={createdAt} class="text-sm text-(--color-text-muted)" />
 
     {/* タイトルのリンクをカード全体に広げる (タグのリンクは手前に出す) */}
-    <h3 class="text-lg leading-snug font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary)">
+    <h3 class="line-clamp-2 text-lg leading-snug font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary) sm:text-xl">
       <a href={url} class="after:absolute after:inset-0">
         {title}
       </a>
@@ -40,7 +37,7 @@ const url = `/posts/${post.id}`;
 
     <p class="line-clamp-2 text-sm text-(--color-text-body)">{description}</p>
 
-    <ul class="relative z-10 mt-auto flex flex-wrap gap-2 pt-2">
+    <ul class="relative z-10 flex flex-wrap gap-2 pt-1 max-sm:group-hover:pointer-events-none">
       {tags.map((tag) => (
         <li>
           <a

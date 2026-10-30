@@ -62,7 +62,7 @@ const recentPosts = allBlogPosts
             <li>
               <ArticleCard
                 title={post.data.title}
-                createdAt={post.data.createdAt.toISOString().split("T")[0]}
+                createdAt={post.data.createdAt}
                 url={`/posts/${post.id}`}
               />
             </li>
@@ -76,7 +76,7 @@ const recentPosts = allBlogPosts
                 <li>
                   <ArticleCard
                     title={post.data.title}
-                    createdAt={post.data.createdAt.toISOString().split("T")[0]}
+                    createdAt={post.data.createdAt}
                     url={`/posts/${post.id}`}
                   />
                 </li>
