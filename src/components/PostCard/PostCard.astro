@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+// 記事一覧用の詳細カード: OGP 画像・タイトル・タグ・概要・日付を表示する
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { title, description, tags, createdAt } = post.data;
+const date = createdAt.toISOString().split("T")[0];
+const url = `/posts/${post.id}`;
+---
+
+<article class="group relative flex h-full flex-col overflow-hidden rounded-xl border border-(--color-border) bg-(--color-bg-surface) transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-lg">
+  <img
+    src={`/og/${post.id}.png`}
+    alt=""
+    width={1200}
+    height={630}
+    loading="lazy"
+    decoding="async"
+    class="aspect-[1200/630] w-full border-b border-(--color-border) object-cover"
+  />
+
+  <div class="flex flex-1 flex-col gap-2 p-4">
+    <time
+      datetime={date}
+      class="text-xs text-(--color-text-muted) tabular-nums"
+    >
+      {date}
+    </time>
+
+    {/* タイトルのリンクをカード全体に広げる (タグのリンクは手前に出す) */}
+    <h3 class="text-lg leading-snug font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary)">
+      <a href={url} class="after:absolute after:inset-0">
+        {title}
+      </a>
+    </h3>
+
+    <p class="line-clamp-2 text-sm text-(--color-text-body)">{description}</p>
+
+    <ul class="relative z-10 mt-auto flex flex-wrap gap-2 pt-2">
+      {tags.map((tag) => (
+        <li>
+          <a
+            href={`/posts/tag/${tag}`}
+            class="rounded-md bg-(--color-primary-subtle) px-2 py-0.5 text-xs text-(--color-text-body) transition-colors hover:text-(--color-primary)"
+          >
+            #{tag}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</article>

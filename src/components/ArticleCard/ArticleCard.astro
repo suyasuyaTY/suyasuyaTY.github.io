@@ -1,15 +1,14 @@
 ---
-import { Image } from "astro:assets";
-import styles from "./ArticleCard.module.css";
+import { Icon } from "astro-icon/components";
 
+// TOP 用の簡易カード: 日付・タイトル・矢印だけを表示する
 interface Props {
   title: string;
   createdAt: string;
-  thumbnail: string | ImageMetadata;
   url: string;
 }
 
-const { title, createdAt, url, thumbnail } = Astro.props;
+const { title, createdAt, url } = Astro.props;
 
 const isExternalUrl = (href: string, base: URL) => {
   try {
@@ -25,24 +24,30 @@ const isExternal = isExternalUrl(url, Astro.url);
 const linkAttrs = isExternal
   ? { target: "_blank", rel: "noopener noreferrer" }
   : {};
-const imageClass = "aspect-[1.91/1] flex-0 object-contain";
 ---
 
-<a href={url} {...linkAttrs} class={styles.articleCard}>
-  <div class="flex flex-1 flex-col justify-between px-4 py-4">
-    <div class="text-normal font-bold text-(--color-text-heading)">
-      {title}
-    </div>
+<a
+  href={url}
+  {...linkAttrs}
+  class="group flex items-center gap-4 rounded-lg px-4 py-3 transition-colors hover:bg-(--color-primary-subtle)"
+>
+  <time
+    datetime={createdAt}
+    class="shrink-0 text-sm text-(--color-text-muted) tabular-nums"
+  >
+    {createdAt}
+  </time>
 
-    <p class="text-xs text-(--color-text-muted)">
-      {createdAt}
-    </p>
-  </div>
-  {
-    typeof thumbnail === "string" ? (
-      <img src={thumbnail} alt={title} class={imageClass} loading="lazy" />
-    ) : (
-      <Image src={thumbnail} alt={title} class={imageClass} />
-    )
-  }
+  <span class="min-w-0 flex-1 font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary)">
+    {title}
+  </span>
+
+  <Icon
+    name={
+      isExternal
+        ? "heroicons:arrow-top-right-on-square-20-solid"
+        : "heroicons:arrow-right-20-solid"
+    }
+    class="h-5 w-5 shrink-0 text-(--color-text-muted) transition-[color,translate] group-hover:translate-x-1 group-hover:text-(--color-primary)"
+  />
 </a>
