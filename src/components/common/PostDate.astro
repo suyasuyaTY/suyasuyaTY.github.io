@@ -1,5 +1,5 @@
 ---
-// 記事の日付を「2025年12月05日」の形で、ドット絵風のフォントで表示する
+// 記事の日付を「2025.12.05」の形で、等幅のフォントで表示する
 interface Props {
   date: Date;
   class?: string;
@@ -9,10 +9,10 @@ const { date, class: className } = Astro.props;
 
 // frontmatter の日付は UTC の 0 時なので、UTC で年月日を取り出す
 const pad = (n: number) => String(n).padStart(2, "0");
-const label = `${date.getUTCFullYear()}年${pad(date.getUTCMonth() + 1)}月${pad(date.getUTCDate())}日`;
+const label = `${date.getUTCFullYear()}.${pad(date.getUTCMonth() + 1)}.${pad(date.getUTCDate())}`;
 const iso = date.toISOString().split("T")[0];
 ---
 
-<time datetime={iso} class:list={["font-dot tabular-nums", className]}>
+<time datetime={iso} class:list={["font-code tabular-nums", className]}>
   {label}
 </time>

@@ -1,7 +1,7 @@
 /* theme.css */
 @theme {
   --font-quicksand: "Quicksand", sans-serif;
-  --font-dot: "DotGothic16", sans-serif;
+  --font-code: "M PLUS 1 Code", monospace;
 }
 
 /* Tailwind v4 (または PostCSS) の機能を使って
