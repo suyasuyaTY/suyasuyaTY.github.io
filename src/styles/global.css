@@ -1,5 +1,5 @@
 /* 外部リソース */
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Quicksand:wght@300..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Quicksand:wght@300..700&family=M+PLUS+1+Code:wght@400;500&display=swap");
 
 /* Tailwind 本体 */
 @import "tailwindcss";

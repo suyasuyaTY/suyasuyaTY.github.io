@@ -7,6 +7,7 @@ import TableOfContents from "@components/TableOfContents/TableOfContents.astro";
 import TocDrawer from "@components/TableOfContents/TocDrawer.astro";
 import ProfileCard from "@components/Profile/ProfileCard.astro";
 import ShareButtons from "@components/ShareButtons/ShareButtons.astro";
+import PostDate from "@components/common/PostDate.astro";
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection("blog");
@@ -25,9 +26,8 @@ if (!entry) {
 }
 const { Content, headings, remarkPluginFrontmatter } = await render(entry);
 
-const formatDate = (date: Date) => date.toISOString().split("T")[0];
-const createdAt = formatDate(entry.data.createdAt);
-const updatedAt = formatDate(entry.data.updatedAt);
+const { createdAt, updatedAt } = entry.data;
+const isUpdated = updatedAt.getTime() !== createdAt.getTime();
 const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
 const pageUrl = Astro.site
   ? new URL(Astro.url.pathname, Astro.site).href
@@ -58,11 +58,11 @@ const pageUrl = Astro.site
                 size={28}
                 class="icon-badge"
               />
-              <time datetime={createdAt}>{createdAt}</time>
-              {updatedAt !== createdAt && (
+              <PostDate date={createdAt} />
+              {isUpdated && (
                 <span class="flex items-center gap-1">
                   <Icon name="heroicons:arrow-path-20-solid" size={16} />
-                  <time datetime={updatedAt}>{updatedAt}</time>
+                  <PostDate date={updatedAt} />
                 </span>
               )}
             </div>

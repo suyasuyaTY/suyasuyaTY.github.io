@@ -2,7 +2,7 @@
 import PostTaxonomy from "./PostTaxonomy.astro";
 ---
 
-{/* 記事一覧とカテゴリ・タグ一覧を別のカードにして横に並べる (スマホは縦に並べる) */}
+{/* 記事一覧とカテゴリ・タグ一覧を別のカードにして横に並べる (lg 未満は縦に並べる) */}
 <div class="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-6">
   <section class="widget-card min-w-0">
     <slot />

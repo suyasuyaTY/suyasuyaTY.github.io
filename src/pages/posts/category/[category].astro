@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import PostTimeline from "@components/PostTimeline/PostTimeline.astro";
+import PostCardList from "@components/PostCard/PostCardList.astro";
 import PostsWithTaxonomy from "@components/PostTaxonomy/PostsWithTaxonomy.astro";
 import { getCollection } from "astro:content";
 
@@ -27,6 +27,6 @@ const filteredPosts = allBlogPosts
   <PostsWithTaxonomy>
     <h2>{category}</h2>
 
-    <PostTimeline posts={filteredPosts} />
+    <PostCardList posts={filteredPosts} />
   </PostsWithTaxonomy>
 </Layout>

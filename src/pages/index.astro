@@ -44,7 +44,9 @@ const recentPosts = allBlogPosts
       <section>
         <h3 class="text-lg font-bold">趣味</h3>
         <div class="flex flex-wrap gap-2">
-          {hobbys.map((hobby) => <span>#{hobby} </span>)}
+          {hobbys.map((hobby) => (
+            <span>#{hobby} </span>
+          ))}
         </div>
       </section>
     </div>
@@ -55,30 +57,26 @@ const recentPosts = allBlogPosts
     <div class="flex flex-col gap-4 py-4">
       <section>
         <h3>Posts</h3>
-        <ul class="my-4 flex flex-col gap-2">
-          {
-            recentPosts.map((post) => (
-              <li>
-                <ArticleCard
-                  title={post.data.title}
-                  createdAt={post.data.createdAt.toISOString().split("T")[0]}
-                  thumbnail={post.data.thumbnail ?? `/og/${post.id}.png`}
-                  url={`/posts/${post.id}`}
-                />
-              </li>
-            ))
-          }
+        <ul class="my-4 flex flex-col">
+          {recentPosts.map((post) => (
+            <li>
+              <ArticleCard
+                title={post.data.title}
+                createdAt={post.data.createdAt}
+                url={`/posts/${post.id}`}
+              />
+            </li>
+          ))}
         </ul>
         <section class="my-4">
           <h3>Zenn</h3>
-          <ul class="my-4 flex flex-col gap-2">
+          <ul class="my-4 flex flex-col">
             <!-- {
               recentPosts.map((post) => (
                 <li>
                   <ArticleCard
                     title={post.data.title}
-                    createdAt={post.data.createdAt.toISOString().split("T")[0]}
-                    thumbnail={post.data.thumbnail}
+                    createdAt={post.data.createdAt}
                     url={`/posts/${post.id}`}
                   />
                 </li>
@@ -88,24 +86,20 @@ const recentPosts = allBlogPosts
         </section>
       </section>
     </div>
-    {
-      /* <section>
+    {/* <section>
     <h2 class="text-4xl">Projects</h2>
     <div></div>
-  </section>*/
-    }
+  </section>*/}
 
     <section>
       <h2>Skills</h2>
       <ul class="my-4 flex flex-col gap-4">
-        {
-          skills.map((skillGroup) => (
-            <li>
-              <h3>{skillGroup.category}</h3>
-              <p class="font-normal">{skillGroup.items.join(", ")}</p>
-            </li>
-          ))
-        }
+        {skills.map((skillGroup) => (
+          <li>
+            <h3>{skillGroup.category}</h3>
+            <p class="font-normal">{skillGroup.items.join(", ")}</p>
+          </li>
+        ))}
       </ul>
     </section>
 
@@ -113,14 +107,12 @@ const recentPosts = allBlogPosts
       <h2>Achievements</h2>
       <div>
         <ul class="my-4 flex flex-col gap-4">
-          {
-            achievements.map((achievement) => (
-              <li class="rounded-xl border px-8 py-4">
-                <h3>{achievement.title}</h3>
-                <time class="text-xs font-light">{achievement.date}</time>
-              </li>
-            ))
-          }
+          {achievements.map((achievement) => (
+            <li class="rounded-xl border px-8 py-4">
+              <h3>{achievement.title}</h3>
+              <time class="text-xs font-light">{achievement.date}</time>
+            </li>
+          ))}
         </ul>
       </div>
     </section>
@@ -129,18 +121,16 @@ const recentPosts = allBlogPosts
       <h2>Experience</h2>
       <div>
         <ul class="my-4 px-4">
-          {
-            experiences.map((exp) => (
-              <ExprienceCard
-                title={exp.title}
-                subTitle={exp.subTitle}
-                description={exp.description}
-                date={exp.date}
-                category={exp.category}
-                href={exp.href}
-              />
-            ))
-          }
+          {experiences.map((exp) => (
+            <ExprienceCard
+              title={exp.title}
+              subTitle={exp.subTitle}
+              description={exp.description}
+              date={exp.date}
+              category={exp.category}
+              href={exp.href}
+            />
+          ))}
         </ul>
       </div>
     </section>

@@ -1,6 +1,7 @@
 /* theme.css */
 @theme {
   --font-quicksand: "Quicksand", sans-serif;
+  --font-code: "M PLUS 1 Code", monospace;
 }
 
 /* Tailwind v4 (または PostCSS) の機能を使って
@@ -37,6 +38,18 @@
     --color-bg-grad-1: theme(colors.blue.200);
     --color-bg-grad-2: theme(colors.indigo.200);
     --color-bg-grad-3: theme(colors.white);
+
+    /* 記事カードのホバー色 (カードごとに1色を割り当てる): 背景 / 枠・文字 */
+    --color-tint-sky: theme(colors.sky.100);
+    --color-tint-sky-strong: theme(colors.sky.600);
+    --color-tint-cyan: theme(colors.cyan.100);
+    --color-tint-cyan-strong: theme(colors.cyan.700);
+    --color-tint-blue: theme(colors.blue.100);
+    --color-tint-blue-strong: theme(colors.blue.600);
+    --color-tint-indigo: theme(colors.indigo.100);
+    --color-tint-indigo-strong: theme(colors.indigo.600);
+    --color-tint-violet: theme(colors.violet.100);
+    --color-tint-violet-strong: theme(colors.violet.600);
   }
 
   /* --- Dark Mode Overrides --- */
@@ -65,5 +78,16 @@
     --color-bg-grad-1: theme(colors.indigo.900);
     --color-bg-grad-2: theme(colors.blue.950);
     --color-bg-grad-3: theme(colors.gray.950);
+
+    --color-tint-sky: theme(colors.sky.950 / 60%);
+    --color-tint-sky-strong: theme(colors.sky.400);
+    --color-tint-cyan: theme(colors.cyan.950 / 60%);
+    --color-tint-cyan-strong: theme(colors.cyan.400);
+    --color-tint-blue: theme(colors.blue.950 / 60%);
+    --color-tint-blue-strong: theme(colors.blue.400);
+    --color-tint-indigo: theme(colors.indigo.950 / 60%);
+    --color-tint-indigo-strong: theme(colors.indigo.400);
+    --color-tint-violet: theme(colors.violet.950 / 60%);
+    --color-tint-violet-strong: theme(colors.violet.400);
   }
 }
