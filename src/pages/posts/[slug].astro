@@ -6,6 +6,7 @@ import Layout from "@layouts/Layout.astro";
 import TableOfContents from "@components/TableOfContents/TableOfContents.astro";
 import TocDrawer from "@components/TableOfContents/TocDrawer.astro";
 import ProfileCard from "@components/Profile/ProfileCard.astro";
+import ShareButtons from "@components/ShareButtons/ShareButtons.astro";
 
 export async function getStaticPaths() {
   const allBlogPosts = await getCollection("blog");
@@ -28,6 +29,9 @@ const formatDate = (date: Date) => date.toISOString().split("T")[0];
 const createdAt = formatDate(entry.data.createdAt);
 const updatedAt = formatDate(entry.data.updatedAt);
 const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
+const pageUrl = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).href
+  : Astro.url.href;
 ---
 
 <Layout
@@ -112,6 +116,16 @@ const hasToc = headings.some(({ depth }) => depth === 2 || depth === 3);
         <div class="prose prose-blue dark:prose-invert max-w-none">
           <Content />
         </div>
+
+        <footer class="mt-12 flex flex-col items-end gap-3 border-t border-(--color-border) pt-6">
+          <p class="text-sm font-bold text-(--color-text-muted)">
+            この記事をシェアする
+          </p>
+          <ShareButtons
+            title={remarkPluginFrontmatter["title"]}
+            url={pageUrl}
+          />
+        </footer>
       </article>
 
       <section aria-label="この記事を書いた人" class="widget-card md:px-10">
