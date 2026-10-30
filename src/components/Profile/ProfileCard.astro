@@ -2,22 +2,10 @@
 import Profile from "../../images/Profile.png";
 import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
+import { getEntry } from "astro:content";
 
-const links = [
-  {
-    href: "https://github.com/suyasuyaTY",
-    icon: "github",
-    darkIcon: "github-white",
-  },
-  {
-    href: "https://twitter.com/suyasuyaTY",
-    icon: "twitter",
-  },
-  {
-    href: "https://zenn.dev/suyasuyaty",
-    icon: "zenn",
-  },
-];
+const profile = await getEntry("profiles", "suyasuyaty");
+const links = profile?.data.socials ?? [];
 ---
 
 <div class="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
