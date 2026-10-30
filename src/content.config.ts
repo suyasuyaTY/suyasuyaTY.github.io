@@ -9,6 +9,8 @@ const blog = defineCollection({
       updatedAt: z.date(),
       title: z.string(),
       description: z.string(),
+      // 記事ページに表示する AI 要約。記事を書いた AI アプリで一緒に作る (必須)
+      summary: z.string().min(1),
       // 記事ページのトップ画像。OGP 画像は全記事 /og/[slug].png を自動生成する
       thumbnail: image().optional(),
       category: z.string(),
