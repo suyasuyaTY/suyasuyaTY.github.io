@@ -37,7 +37,7 @@ const pageUrl = Astro.site
 <Layout
   title={`${remarkPluginFrontmatter["title"]} | すやすやログ`}
   description={remarkPluginFrontmatter["description"]}
-  ogImage={entry.data.thumbnail.src}
+  ogImage={`/og/${entry.id}.png`}
   ogType="article"
   bare
 >
@@ -99,18 +99,21 @@ const pageUrl = Astro.site
             </div>
           </div>
 
-          <div
-            class="mb-8 w-full overflow-hidden rounded-xl shadow-sm"
-            style="background-color: var(--color-bg-surface);"
-          >
-            <Image
-              src={entry.data.thumbnail}
-              alt={entry.data.title}
-              width={1200}
-              height={630}
-              class="aspect-[1.91/1] h-full w-full object-cover"
-            />
-          </div>
+          {/* サムネがある記事だけトップ画像を表示する */}
+          {entry.data.thumbnail && (
+            <div
+              class="mb-8 w-full overflow-hidden rounded-xl shadow-sm"
+              style="background-color: var(--color-bg-surface);"
+            >
+              <Image
+                src={entry.data.thumbnail}
+                alt={entry.data.title}
+                width={1200}
+                height={630}
+                class="aspect-[1.91/1] h-full w-full object-cover"
+              />
+            </div>
+          )}
         </header>
 
         <div class="prose prose-blue dark:prose-invert max-w-none">
