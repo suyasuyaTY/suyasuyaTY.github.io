@@ -1,5 +1,5 @@
 import { z, defineCollection } from "astro:content";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 
 const blog = defineCollection({
   loader: glob({ pattern: "**/*.md", base: "./src/content/blog" }),
@@ -56,7 +56,20 @@ const profiles = defineCollection({
   }),
 });
 
+const links = defineCollection({
+  loader: file("./src/content/links/friends.yaml"),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      url: z.string().url(),
+      description: z.string().optional(),
+      creator: z.string(),
+      image: image(),
+      darkImage: image().optional(),
+    }),
+});
+
 // Expose your defined collection to Astro
 // with the `collections` export
 
-export const collections = { blog, profiles };
+export const collections = { blog, profiles, links };
