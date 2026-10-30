@@ -5,7 +5,7 @@ import PostDate from "@components/common/PostDate.astro";
 import { getReadingStats } from "../../lib/readingStats";
 
 // 記事一覧用の詳細カード: 日付・タイトル・概要・読了時間・文字数・タグを表示する
-// - タイトルと概要は決まった行数の高さを取り、長さが違ってもカードの高さをそろえる
+// - タイトルは1行、概要は2行分の高さを取り、長さが違ってもカードの高さをそろえる
 // - ホバーすると、カードごとに割り当てた青系の色でカード全体を染め、右の > が → に伸びる
 interface Props {
   post: CollectionEntry<"blog">;
@@ -33,13 +33,13 @@ const tint = tints[hash % tints.length];
     />
 
     {/* タイトルのリンクをカード全体に広げる (タグのリンクは手前に出す) */}
-    <h3 class="mt-1 line-clamp-1 text-base leading-6 font-bold text-(--color-text-heading) transition-colors duration-300 group-hover:text-(--tint-strong) lg:mt-2 lg:line-clamp-2 lg:min-h-[2lh] lg:text-[1.375rem] lg:leading-snug">
+    <h3 class="mt-1 line-clamp-1 text-base leading-6 font-bold text-(--color-text-heading) transition-colors duration-300 group-hover:text-(--tint-strong) lg:mt-2 lg:text-[1.375rem] lg:leading-snug">
       <a href={url} class="after:absolute after:inset-0">
         {title}
       </a>
     </h3>
 
-    <p class="line-clamp-2 h-10 text-sm leading-5 text-(--color-text-body) lg:line-clamp-3 lg:h-[4.95rem] lg:text-[0.9625rem] lg:leading-[1.65rem]">
+    <p class="line-clamp-2 h-10 text-sm leading-5 text-(--color-text-body) lg:h-[3.3rem] lg:text-[0.9625rem] lg:leading-[1.65rem]">
       {description}
     </p>
 
