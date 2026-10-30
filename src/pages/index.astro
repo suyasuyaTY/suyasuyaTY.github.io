@@ -62,7 +62,7 @@ const recentPosts = allBlogPosts
                 <ArticleCard
                   title={post.data.title}
                   createdAt={post.data.createdAt.toISOString().split("T")[0]}
-                  thumbnail={post.data.thumbnail}
+                  thumbnail={post.data.thumbnail ?? `/og/${post.id}.png`}
                   url={`/posts/${post.id}`}
                 />
               </li>
