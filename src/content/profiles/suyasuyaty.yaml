@@ -4,6 +4,15 @@ bio: |
   アルゴリズムやデータ構造を駆使して、問題解決や計算量削減を考えることが好きです。
   質のいいサービスを快適に使えるような開発をしたいのでフルスタックに勉強しています。
 
+socials:
+  - href: "https://github.com/suyasuyaTY"
+    icon: "github"
+    darkIcon: "github-white"
+  - href: "https://twitter.com/suyasuyaTY"
+    icon: "twitter"
+  - href: "https://zenn.dev/suyasuyaty"
+    icon: "zenn"
+
 hobbys:
   - "旅行"
   - "食事"

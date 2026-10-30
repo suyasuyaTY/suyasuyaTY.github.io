@@ -26,6 +26,15 @@ const profiles = defineCollection({
     role: z.string(),
     bio: z.string(),
 
+    // icon は src/icons/ のファイル名。darkIcon はダークモード時に差し替えるアイコン
+    socials: z.array(
+      z.object({
+        href: z.string().url(),
+        icon: z.string(),
+        darkIcon: z.string().optional(),
+      }),
+    ),
+
     hobbys: z.array(z.string()),
 
     skills: z.array(
