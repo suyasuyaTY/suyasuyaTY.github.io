@@ -3,6 +3,7 @@ createdAt: 2025-12-04
 updatedAt: 2025-12-04
 title: 個人ブログサイトを作りました
 description: AstroとTailwind CSSを使って個人ブログサイトを作成した話。
+summary: インターンで文章力の足りなさを感じ、X・note・Zennの不満点も踏まえて、ポートフォリオと一体になった個人ブログをAstroとTailwind CSSで自作した。Markdownで記事を管理できること、必要な箇所だけReactを使えること、クライアントJSを最小限にできることがAstroを選んだ理由。View Transitionsによる快適なページ遷移や画像の自動最適化、devContainerでの開発体験もよかった。
 thumbnail: ./hero.png
 category: IT
 tags: ["Astro", "Tailwind"]
