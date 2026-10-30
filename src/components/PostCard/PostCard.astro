@@ -4,10 +4,9 @@ import { Icon } from "astro-icon/components";
 import PostDate from "@components/common/PostDate.astro";
 import { getReadingStats } from "../../lib/readingStats";
 
-// 記事一覧用の詳細カード: 日付・タイトル・概要・読了時間・タグ (lg 以上は右に OGP 画像) を表示する
+// 記事一覧用の詳細カード: 日付・タイトル・概要・読了時間・文字数・タグを表示する
 // - タイトルと概要は決まった行数の高さを取り、長さが違ってもカードの高さをそろえる
-// - lg 以上は文字欄の幅を固定し、OGP 画像はカードの右端に置く。
-//   カードが狭くて文字欄と重なる分は、グラデーションの境界を右にずらして隠す。ホバーで画像全体を見せる
+// - ホバーすると、カードごとに割り当てた青系の色でカード全体を染め、右の > が → に伸びる
 interface Props {
   post: CollectionEntry<"blog">;
 }
@@ -16,18 +15,25 @@ const { post } = Astro.props;
 const { title, description, tags, createdAt } = post.data;
 const url = `/posts/${post.id}`;
 const { characters, minutes } = getReadingStats(post.body ?? "");
+
+// 記事 ID から色を決める (ビルドのたびに色が変わらないようにする)
+const tints = ["sky", "cyan", "blue", "indigo", "violet"];
+const hash = [...post.id].reduce((sum, c) => sum + c.charCodeAt(0), 0);
+const tint = tints[hash % tints.length];
 ---
 
-{/* isolate: Safari で translate 中に角丸の切り抜きが外れ、画像の角が見えるのを防ぐ */}
-<article class="group @container relative isolate flex overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-bg-surface) transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-lg">
-  <div class="flex min-w-0 flex-1 flex-col p-4 lg:w-[34rem] lg:flex-none lg:p-[1.65rem]">
+<article
+  style={`--tint: var(--color-tint-${tint}); --tint-strong: var(--color-tint-${tint}-strong);`}
+  class="group relative flex items-center gap-4 rounded-2xl border border-(--color-border) bg-(--color-bg-surface) p-4 transition-[background-color,border-color,box-shadow,translate] duration-300 hover:-translate-y-0.5 hover:border-(--tint-strong) hover:bg-(--tint) hover:shadow-lg lg:p-[1.65rem]"
+>
+  <div class="flex min-w-0 flex-1 flex-col">
     <PostDate
       date={createdAt}
       class="text-xs text-(--color-text-muted) lg:text-[0.9625rem]"
     />
 
     {/* タイトルのリンクをカード全体に広げる (タグのリンクは手前に出す) */}
-    <h3 class="mt-1 line-clamp-1 text-base leading-6 font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary) lg:mt-2 lg:line-clamp-2 lg:min-h-[2lh] lg:text-[1.375rem] lg:leading-snug">
+    <h3 class="mt-1 line-clamp-1 text-base leading-6 font-bold text-(--color-text-heading) transition-colors duration-300 group-hover:text-(--tint-strong) lg:mt-2 lg:line-clamp-2 lg:min-h-[2lh] lg:text-[1.375rem] lg:leading-snug">
       <a href={url} class="after:absolute after:inset-0">
         {title}
       </a>
@@ -37,11 +43,21 @@ const { characters, minutes } = getReadingStats(post.body ?? "");
       {description}
     </p>
 
-    <p class="mt-2 flex items-center gap-1 text-xs text-(--color-text-muted) lg:mt-3 lg:text-[0.825rem]">
-      <Icon name="heroicons:clock-20-solid" class="h-3.5 w-3.5 lg:h-4 lg:w-4" />
-      <span>約{minutes}分</span>
-      <span aria-hidden="true">·</span>
-      <span>{characters.toLocaleString("ja-JP")}文字</span>
+    <p class="mt-2 flex items-center gap-3 text-xs text-(--color-text-muted) lg:mt-3 lg:text-[0.825rem]">
+      <span class="flex items-center gap-1">
+        <Icon
+          name="heroicons:clock-20-solid"
+          class="h-3.5 w-3.5 lg:h-4 lg:w-4"
+        />
+        約{minutes}分
+      </span>
+      <span class="flex items-center gap-1">
+        <Icon
+          name="heroicons:document-text-20-solid"
+          class="h-3.5 w-3.5 lg:h-4 lg:w-4"
+        />
+        {characters.toLocaleString("ja-JP")}文字
+      </span>
     </p>
 
     <ul class="relative z-10 mt-1.5 flex flex-wrap gap-2 lg:mt-2">
@@ -49,7 +65,7 @@ const { characters, minutes } = getReadingStats(post.body ?? "");
         <li>
           <a
             href={`/posts/tag/${tag}`}
-            class="rounded-md bg-(--color-primary-subtle) px-2 py-0.5 text-xs text-(--color-text-body) transition-colors hover:text-(--color-primary) lg:text-[0.825rem]"
+            class="rounded-md bg-(--color-primary-subtle) px-2 py-0.5 text-xs text-(--color-text-body) transition-colors group-hover:bg-(--color-bg-surface) hover:text-(--color-primary) lg:text-[0.825rem]"
           >
             #{tag}
           </a>
@@ -58,44 +74,24 @@ const { characters, minutes } = getReadingStats(post.body ?? "");
     </ul>
   </div>
 
-  {/* 高さはカードに合わせ、幅は 1200:630 の比率で決まる */}
-  <img
-    src={`/og/${post.id}.png`}
-    alt=""
-    width={1200}
-    height={630}
-    loading="lazy"
-    decoding="async"
-    class="post-card-image pointer-events-none absolute inset-y-0 right-0 -z-10 hidden aspect-[1200/630] h-full w-auto max-w-none group-hover:z-20 lg:block"
-  />
+  {/* > の後ろから軸が伸びて → になる */}
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    class="h-6 w-6 shrink-0 text-(--color-text-muted) transition-colors duration-300 group-hover:text-(--tint-strong) lg:h-7 lg:w-7"
+  >
+    <path
+      d="M5 12h13"
+      class="origin-right scale-x-0 transition-transform duration-300 ease-out [transform-box:fill-box] group-hover:scale-x-100"
+    ></path>
+    <path
+      d="M12 5l7 7-7 7"
+      class="-translate-x-1.5 transition-transform duration-300 ease-out group-hover:translate-x-0"
+    ></path>
+  </svg>
 </article>
-
-<style>
-  @property --reveal {
-    syntax: "<length-percentage>";
-    inherits: false;
-    initial-value: 0%;
-  }
-
-  .post-card-image {
-    /* 文字欄 (34rem) と重なる幅。重ならなければ 0 */
-    --fade-start: max(0px, calc(34rem - 100cqw + 100%));
-    mask-image: linear-gradient(
-      to right,
-      transparent calc(var(--fade-start) - var(--reveal)),
-      black calc(var(--fade-start) + 30% - var(--reveal))
-    );
-    transition: --reveal 0.4s ease;
-  }
-
-  /* ホバーでグラデーションを左へ押し出し、画像全体を見せる */
-  .group:hover .post-card-image {
-    --reveal: 200%;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .post-card-image {
-      transition: none;
-    }
-  }
-</style>
