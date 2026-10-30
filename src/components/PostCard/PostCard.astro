@@ -2,9 +2,9 @@
 import type { CollectionEntry } from "astro:content";
 import PostDate from "@components/common/PostDate.astro";
 
-// 記事一覧用の詳細カード: OGP 画像・タイトル・タグ・概要・日付を表示する
-// - 広い画面 (lg 以上): 左に文字情報、右に OGP 画像 (画像の左端をぼかして境目をなくす)
-// - lg 未満: OGP 画像の上に文字情報を重ね、ホバーすると文字情報が消えて画像だけになる
+// 記事一覧用の詳細カード: 日付・タイトル・概要・タグ (lg 以上は右に OGP 画像) を表示する
+// - タイトルは2行分、概要は3行分の高さを常に取り、長さが違ってもカードの高さをそろえる
+// - lg 以上の OGP 画像はカードの高さに合わせて表示し (幅 29.5rem でちょうど 1200:630)、左端をぼかして文字との境目をなくす
 interface Props {
   post: CollectionEntry<"blog">;
 }
@@ -14,30 +14,23 @@ const { title, description, tags, createdAt } = post.data;
 const url = `/posts/${post.id}`;
 ---
 
-<article class="group relative overflow-hidden rounded-xl border border-(--color-border) bg-(--color-bg-surface) transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-lg lg:flex lg:items-center">
-  <img
-    src={`/og/${post.id}.png`}
-    alt=""
-    width={1200}
-    height={630}
-    loading="lazy"
-    decoding="async"
-    class="aspect-[1200/630] w-full object-cover lg:order-2 lg:w-[45%] lg:shrink-0 lg:mask-l-from-60% lg:mask-l-to-100%"
-  />
-
-  <div class="flex flex-col gap-2 p-4 transition-opacity duration-300 max-lg:absolute max-lg:inset-0 max-lg:justify-center max-lg:bg-(--color-bg-surface)/75 max-lg:backdrop-blur-[2px] sm:max-lg:p-8 sm:max-lg:backdrop-blur-[4px] max-lg:group-focus-within:opacity-0 max-lg:group-hover:opacity-0 lg:order-1 lg:min-w-0 lg:flex-1 lg:p-6">
+{/* isolate: Safari で translate 中に角丸の切り抜きが外れ、画像の角が見えるのを防ぐ */}
+<article class="group relative isolate flex overflow-hidden rounded-2xl border border-(--color-border) bg-(--color-bg-surface) transition-[box-shadow,translate] hover:-translate-y-0.5 hover:shadow-lg">
+  <div class="flex min-w-0 flex-1 flex-col gap-2 p-5 lg:p-6">
     <PostDate date={createdAt} class="text-sm text-(--color-text-muted)" />
 
     {/* タイトルのリンクをカード全体に広げる (タグのリンクは手前に出す) */}
-    <h3 class="line-clamp-2 text-lg leading-snug sm:text-xl font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary)">
+    <h3 class="line-clamp-2 min-h-[2lh] text-lg leading-snug font-bold text-(--color-text-heading) transition-colors group-hover:text-(--color-primary) sm:text-xl">
       <a href={url} class="after:absolute after:inset-0">
         {title}
       </a>
     </h3>
 
-    <p class="line-clamp-2 text-sm text-(--color-text-body)">{description}</p>
+    <p class="line-clamp-3 h-18 text-sm leading-6 text-(--color-text-body)">
+      {description}
+    </p>
 
-    <ul class="relative z-10 flex flex-wrap gap-2 pt-1 max-lg:group-hover:pointer-events-none">
+    <ul class="relative z-10 flex flex-wrap gap-2 pt-1">
       {tags.map((tag) => (
         <li>
           <a
@@ -49,5 +42,17 @@ const url = `/posts/${post.id}`;
         </li>
       ))}
     </ul>
+  </div>
+
+  <div class="relative hidden w-[min(50%,29.5rem)] shrink-0 lg:block">
+    <img
+      src={`/og/${post.id}.png`}
+      alt=""
+      width={1200}
+      height={630}
+      loading="lazy"
+      decoding="async"
+      class="absolute inset-0 h-full w-full object-cover object-center mask-l-from-60% mask-l-to-100%"
+    />
   </div>
 </article>
