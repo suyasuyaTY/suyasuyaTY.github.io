@@ -2,15 +2,15 @@
 import PostTaxonomy from "./PostTaxonomy.astro";
 ---
 
-{/* 記事一覧とカテゴリ・タグ一覧を別のカードにして横に並べる (スマホは縦に並べる) */}
-<div class="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-6">
+{/* 記事一覧とカテゴリ・タグ一覧を別のカードにして横に並べる (md 未満は縦に並べる) */}
+<div class="flex flex-col gap-4 md:grid md:grid-cols-[minmax(0,1fr)_13rem] md:gap-6 lg:grid-cols-[minmax(0,1fr)_16rem]">
   <section class="widget-card min-w-0">
     <slot />
   </section>
 
   <aside
     aria-label="カテゴリ・タグ一覧"
-    class="widget-card lg:sticky lg:top-28 lg:self-start"
+    class="widget-card md:sticky md:top-28 md:self-start"
   >
     <PostTaxonomy />
   </aside>
