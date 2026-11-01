@@ -84,18 +84,17 @@ const getAriaCurrent = (href: string, pathname: string) => {
               aria-label="メニュー"
               aria-controls="mobileMenu"
               aria-expanded="false"
-              class="flex h-10 w-10 cursor-pointer items-center justify-center rounded hover:bg-(--color-primary-subtle)"
+              class="group/menu flex h-10 w-10 cursor-pointer items-center justify-center rounded hover:bg-(--color-primary-subtle)"
             >
-              <Icon
-                id="menuIconOpen"
-                name="heroicons:bars-3-16-solid"
-                class="block h-5 w-5"
-              />
-              <Icon
-                id="menuIconClose"
-                name="heroicons:x-mark-solid"
-                class="hidden h-5 w-5"
-              />
+              <!-- 3本線を、開いたら上下の線を回転させて × にする -->
+              <span
+                aria-hidden="true"
+                class="relative block h-3.5 w-5 *:absolute *:left-0 *:h-0.5 *:w-full *:rounded-full *:bg-current *:transition-[translate,rotate,opacity,scale] *:duration-300 *:ease-in-out"
+              >
+                <span class="top-0 group-aria-expanded/menu:translate-y-1.5 group-aria-expanded/menu:rotate-45"></span>
+                <span class="top-1.5 group-aria-expanded/menu:scale-x-0 group-aria-expanded/menu:opacity-0"></span>
+                <span class="top-3 group-aria-expanded/menu:-translate-y-1.5 group-aria-expanded/menu:-rotate-45"></span>
+              </span>
             </button>
           </li>
         </ul>
@@ -184,8 +183,6 @@ const getAriaCurrent = (href: string, pathname: string) => {
   const setup = () => {
     const menuToggleBtn = document.getElementById("menuToggle");
     const mobileMenu = document.getElementById("mobileMenu");
-    const iconOpen = document.getElementById("menuIconOpen");
-    const iconClose = document.getElementById("menuIconClose");
     const header = document.getElementById("main-header");
     const themeToggleBtn = document.getElementById("themeToggle");
     if (!menuToggleBtn || !mobileMenu || !header) return;
@@ -207,8 +204,6 @@ const getAriaCurrent = (href: string, pathname: string) => {
       mobileMenu.dataset.open = String(open);
       header.dataset.menuOpen = String(open);
       menuToggleBtn.setAttribute("aria-expanded", String(open));
-      iconOpen?.classList.toggle("hidden", open);
-      iconClose?.classList.toggle("hidden", !open);
     };
     const closeMenu = () => setMenu(false);
 
