@@ -15,13 +15,13 @@ npm run dev    # http://localhost:4321
 
 ## コマンド
 
-| Command           | Action                               |
-| :---------------- | :----------------------------------- |
-| `npm run dev`     | 開発サーバーを起動                   |
-| `npm run build`   | `./dist/` に本番ビルド               |
-| `npm run preview` | ビルド結果をローカルで確認           |
-| `npm run check`   | 型チェック (`astro check`)           |
-| `npm run deploy`  | ビルドして Cloudflare にデプロイ     |
+| Command           | Action                           |
+| :---------------- | :------------------------------- |
+| `npm run dev`     | 開発サーバーを起動               |
+| `npm run build`   | `./dist/` に本番ビルド           |
+| `npm run preview` | ビルド結果をローカルで確認       |
+| `npm run check`   | 型チェック (`astro check`)       |
+| `npm run deploy`  | ビルドして Cloudflare にデプロイ |
 
 ## デプロイ
 

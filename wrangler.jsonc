@@ -6,10 +6,10 @@
   "assets": {
     "directory": "./dist",
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "none"
+    "not_found_handling": "none",
   },
   "routes": [{ "pattern": "suyasuyaty.com", "custom_domain": true }],
   // *.workers.dev では公開しない (独自ドメインに一本化する)
   "workers_dev": false,
-  "preview_urls": true
+  "preview_urls": true,
 }
