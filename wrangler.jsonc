@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "portfolio",
+  "name": "suyasuyaty-github-io",
   "compatibility_date": "2026-11-01",
   // Astro が dist/ に出力した静的ファイルをそのまま配信する (Worker スクリプトは持たない)
   "assets": {
