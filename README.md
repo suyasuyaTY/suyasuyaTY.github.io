@@ -21,7 +21,11 @@ npm run dev    # http://localhost:4321
 | `npm run build`   | `./dist/` に本番ビルド               |
 | `npm run preview` | ビルド結果をローカルで確認           |
 | `npm run check`   | 型チェック (`astro check`)           |
+| `npm run deploy`  | ビルドして Cloudflare にデプロイ     |
 
 ## デプロイ
 
-`main` に push すると GitHub Actions (`.github/workflows/deploy.yml`) で GitHub Pages にデプロイされます。
+Cloudflare Workers (静的アセット) で https://suyasuyaty.com に公開しています。
+`main` に push すると Workers Builds が `npm run build` → `npx wrangler deploy` を実行してデプロイします。設定は `wrangler.jsonc` を参照。
+
+手元から直接デプロイする場合は `npm run deploy` (要 `npx wrangler login`)。
